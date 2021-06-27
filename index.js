@@ -4,19 +4,22 @@ const dotenv = require('dotenv');
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const giphy = require('giphy-api')(process.env.giphyAPIKey);
-let owner;
+const debug = true;
+// const gifs = require('gifs.json');
 
 dotenv.config();
+const owner = process.env.ownerID;
 
 async function getUser(id) {
-	const user = await client.users.fetch(id).catch(err,() {});
-	return user.data;
+	const user = await client.users.fetch(id);
+	if (debug) {
+		console.log(user);
+	}
+	return user;
 }
 
 client.once('ready', () => {
 	console.log('Ready');
-	owner = getUser(process.env.ownerID);
-	console.log(owner);
 });
 
 client.login(process.env.TOKEN);
@@ -28,7 +31,7 @@ client.on('message', message => {
 	switch (ext) {
 	case '.gif':
 		try {
-			const results = giphy.search(pre, function(err, res) {
+			giphy.search(pre, function(err, res) {
 				if (res.data[0] != undefined) {
 					message.channel.send(res.data[0].embed_url);
 				} else {
@@ -57,8 +60,7 @@ client.on('message', message => {
 		break;
 	case '.req':
 		message.channel.send('Feedback Submitted: ' + pre);
-		owner.send('Feedback/Request ' + pre);
-		console.log(owner);
+		client.users.fetch(owner).then(user => { user.send('Feedback/Request: ' + pre);});
 		break;
 	default:
 		break;
