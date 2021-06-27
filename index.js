@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const giphy = require('giphy-api')(process.env.giphyAPIKey);
-const debug = true;
+const debug = false;
 const links = require('./links.json');
 
 dotenv.config();
@@ -21,6 +21,8 @@ client.once('ready', () => {
 client.login(process.env.TOKEN);
 
 client.on('message', message => {
+	if (message.author.bot) return;
+
 	const pre = message.content.slice(0, -4);
 	const ext = message.content.slice(-4);
 	let gifFound = false;
