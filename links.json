@@ -1,0 +1,24 @@
+{
+	"gifs": [
+		{
+			"name": "nod",
+			"embed_url": "https://tenor.com/view/smile-nod-yes-robert-redford-beard-gif-10489927"
+		},
+		{
+			"name": "psh",
+			"embed_url": "https://tenor.com/view/ed-bassmaster-youtuber-youtube-influencer-psh-gif-10556767"
+		},
+		{
+			"name": "unreal",
+			"embed_url": "https://tenor.com/view/unreall-gif-15193874"
+		},
+		{
+			"name": "lookatit",
+			"embed_url": "https://tenor.com/view/just-look-at-it-gif-11036230"
+		},
+		{
+			"name": "foolme",
+			"embed_url": "https://tenor.com/view/george-bush-fool-me-once-brave-gif-12227074"
+		}
+	]
+}

@@ -5,17 +5,13 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const giphy = require('giphy-api')(process.env.giphyAPIKey);
 const debug = true;
-// const gifs = require('gifs.json');
+const links = require('./links.json');
 
 dotenv.config();
 const owner = process.env.ownerID;
 
-async function getUser(id) {
-	const user = await client.users.fetch(id);
-	if (debug) {
-		console.log(user);
-	}
-	return user;
+if (debug) {
+	console.log(links);
 }
 
 client.once('ready', () => {
@@ -27,22 +23,36 @@ client.login(process.env.TOKEN);
 client.on('message', message => {
 	const pre = message.content.slice(0, -4);
 	const ext = message.content.slice(-4);
+	let gifFound = false;
 
 	switch (ext) {
 	case '.gif':
-		try {
-			giphy.search(pre, function(err, res) {
-				if (res.data[0] != undefined) {
-					message.channel.send(res.data[0].embed_url);
-				} else {
-					message.channel.send('Sorry, I was unable to find a gif of ' + pre + '.');
-				}
-				if (err) {
-					console.log(err);
-				}
-			});
-		} catch (error) {
-			console.log(error);
+		if (debug) {
+			console.log('pre: ' + pre);
+			console.log('ext: ' + ext);
+		}
+		for (let index = 0; index < links.gifs.length; index++) {
+			const gif = links.gifs[index];
+			if (gif.name == pre) {
+				message.channel.send(gif.embed_url);
+				gifFound = true;
+			}
+		}
+		if (gifFound == false) {
+			try {
+				giphy.search(pre, function(err, res) {
+					if (res.data[0] != undefined) {
+						message.channel.send(res.data[0].embed_url);
+					} else {
+						message.channel.send('Sorry, I was unable to find a gif of ' + pre + '.');
+					}
+					if (err) {
+						console.log(err);
+					}
+				});
+			} catch (error) {
+				console.log(error);
+			}
 		}
 		break;
 	// Admin Commands
