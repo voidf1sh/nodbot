@@ -1,59 +1,30 @@
 /* eslint-disable brace-style */
 // Variable Assignment
-const fs = require('fs');
 const dotenv = require('dotenv');
 dotenv.config();
 const Discord = require('discord.js');
 const client = new Discord.Client();
-client.commands = new Discord.Collection();
-client.gifs = new Discord.Collection();
+
 const debug = true;
 // const config = require('./config.json');
 const { prefix } = require('./config.json');
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-const gifFiles = fs.readdirSync('./gifs').filter(file => file.endsWith('.js'));
+
 // const owner = process.env.ownerID;
 const giphy = require('giphy-api')(process.env.giphyAPIKey);
+const functions = require('./functions.js');
 
-function getCommandFiles() {
-	for (const file of commandFiles) {
-		const command = require(`./commands/${file}`);
-		client.commands.set(command.name, command);
-	}
-	if (debug) console.log(client.commands);
-}
-
-function getGifFiles() {
-	for (const file of gifFiles) {
-		const gif = require(`./gifs/${file}`);
-		client.gifs.set(gif.name, gif);
-	}
-	if (debug) console.log(client.gifs);
-}
-
-function extCheck(content) {
-	const lastFour = content.slice(-4);
-	switch (lastFour) {
-	case '.gif':
-		return 'gif';
-	case '.jpg':
-		return 'jpg';
-	default:
-		return false;
-	}
-}
 
 client.once('ready', () => {
 	console.log('Ready');
 	client.user.setActivity('Nod Simulator 2021', { type: 'PLAYING' }).then().catch(console.error);
-	getCommandFiles();
-	getGifFiles();
+	functions.getCommandFiles(client);
+	functions.getGifFiles(client);
 });
 
 client.login(process.env.TOKEN);
 
 client.on('message', message => {
-	const ext = extCheck(message.content);
+	const ext = functions.extCheck(message.content);
 	if (debug) console.log(ext);
 	if ((!message.content.startsWith(prefix) && ext == false) || message.author.bot) return;
 

@@ -8,9 +8,13 @@ module.exports = {
 		}
 
 		const fs = require('fs');
-		fs.appendFile(`./gifs/${args[0]}.gif`, `module.exports = {\n\tname: '${args[0]}',\n\tembed_url: '${args[1]}'\n}`, function(err) {
+		fs.appendFile(`./gifs/${args[0]}.js`, `module.exports = {\n\tname: '${args[0]}',\n\tembed_url: '${args[1]}'\n}`, function(err) {
 			if (err) throw err;
 			console.log('Saved file!');
+			const gif = require(`../gifs/${args[0]}.js`);
+			message.client.gifs.set(gif.name, gif);
 		});
+
+		message.reply('GIF saved as: ' + args[0] + '.gif!');
 	}
 }
