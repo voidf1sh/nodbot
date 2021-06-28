@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const fs = require('fs');
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 const gifFiles = fs.readdirSync('./gifs').filter(file => file.endsWith('.js'));
+const pastaFiles = fs.readdirSync('./pastas').filter(file => file.endsWith('.js'));
 const debug = true;
 
 module.exports = {
@@ -21,6 +22,19 @@ module.exports = {
 		}
 		if (debug) console.log(client.gifs);
 	},
+	getPastaFiles(client) {
+		client.pasta = new Discord.Collection();
+		for (const file of pastaFiles) {
+			const pasta = require(`./pasta/${file}`);
+			client.pastas.set(pasta.name, pasta);
+		}
+		if (debug) console.log(client.pastas);
+	},
+	getExtension(args) {
+		const finalWord = args.pop();
+		const file = finalWord.split('.');
+		return file[1];
+	},
 	extCheck(content) {
 		const lastFour = content.slice(-4);
 		switch (lastFour) {
@@ -28,6 +42,8 @@ module.exports = {
 			return 'gif';
 		case '.jpg':
 			return 'jpg';
+		case '.pst':
+			return 'pst';
 		default:
 			return false;
 		}
