@@ -23,9 +23,9 @@ module.exports = {
 		if (debug) console.log(client.gifs);
 	},
 	getPastaFiles(client) {
-		client.pasta = new Discord.Collection();
+		client.pastas = new Discord.Collection();
 		for (const file of pastaFiles) {
-			const pasta = require(`./pasta/${file}`);
+			const pasta = require(`./pastas/${file}`);
 			client.pastas.set(pasta.name, pasta);
 		}
 		if (debug) console.log(client.pastas);
@@ -33,7 +33,7 @@ module.exports = {
 	getExtension(args) {
 		const finalWord = args.pop();
 		const file = finalWord.split('.');
-		return file[1];
+		return file;
 	},
 	extCheck(content) {
 		const lastFour = content.slice(-4);
