@@ -31,7 +31,7 @@ module.exports = {
 		if (debug) console.log(client.pastas);
 	},
 	getExtension(args) {
-		const finalWord = args.pop();
+		const finalWord = args[args.length - 1];
 		const file = finalWord.split('.');
 		return file;
 	},
