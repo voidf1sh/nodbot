@@ -7,7 +7,7 @@ const client = new Discord.Client();
 
 const debug = true;
 // const config = require('./config.json');
-const { prefix } = require('./config.json');
+const { prefix, logChannel, bootMessage, shutdownMessage } = require('./config.json');
 
 // const  owner = process.env.ownerID;
 const giphy = require('giphy-api')(process.env.giphyAPIKey);
@@ -20,6 +20,13 @@ client.once('ready', () => {
 	functions.getCommandFiles(client);
 	functions.getGifFiles(client);
 	functions.getPastaFiles(client);
+	client.channels.fetch(logChannel)
+		.then(channel => {
+			channel.send(bootMessage)
+				.then()
+				.catch(err => console.error(err));
+		})	
+		.catch(err => console.error(err));
 });
 
 client.login(process.env.TOKEN);
@@ -77,7 +84,7 @@ client.on('message', message => {
 			if (!client.pastas.has(file[0])) {
 				message.reply('Sorry I couldn\'t find that gif.');
 			} else {
-				message.channel.send(client.pastas.get(file[0]).content);
+				message.channel.send(client.pastas.get(file[0]).content, { split: { char: ' ' } });
 			}
 			break;
 		default:

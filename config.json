@@ -1,4 +1,7 @@
 {
 	"prefix": "/",
-	"serverID": "760701839427108874"
+	"serverID": "760701839427108874",
+	"logChannel": "858449941911437353",
+	"bootMessage": "NodBot v2 Starting Up",
+	"shutdownMessage": "NodBot v2 Shutting Down"
 }
