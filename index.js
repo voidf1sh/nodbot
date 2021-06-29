@@ -67,14 +67,14 @@ client.on('message', message => {
 			if (!client.gifs.has(file[0])) {
 				giphy.search(query, (err, res) => {
 					if (res.data[0] != undefined) {
-						message.channel.send(res.data[0].embed_url).then().catch(console.error);
+						message.channel.send(query + ' requested by ' + message.author.username + '\n' + res.data[0].embed_url).then().catch(console.error);
 					} else {
 						message.channel.send('I was unable to find a gif of ' + query);
 					}
 					if (err) console.error(err);
 				});
 			} else {
-				message.channel.send(client.gifs.get(query).embed_url);
+				message.channel.send(query + ' requested by ' + message.author.username + '\n' + client.gifs.get(query).embed_url);
 			}
 			break;
 		case 'pasta':
@@ -92,5 +92,8 @@ client.on('message', message => {
 		}
 	}
 
-	
+	// Try to delete the requester's message
+	if (message.deletable) {
+		message.delete().then().catch(err => console.error(err));
+	}
 });
