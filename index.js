@@ -20,76 +20,35 @@ client.once('ready', () => {
 	functions.getCommandFiles(client);
 	functions.getGifFiles(client);
 	functions.getPastaFiles(client);
-	client.channels.fetch(logChannel)
-		.then(channel => {
-			channel.send(bootMessage)
-				.then()
-				.catch(err => console.error(err));
-		})	
-		.catch(err => console.error(err));
+	// client.channels.fetch(logChannel)
+	// 	.then(channel => {
+	// 		channel.send(bootMessage)
+	// 			.then()
+	// 			.catch(err => console.error(err));
+	// 	})	
+	// 	.catch(err => console.error(err));
 });
 
 client.login(process.env.TOKEN);
 
 client.on('message', message => {
-	const args = message.content.trim().split(/ +/);
-	// TODO this will surely break something when trying to use non-filename commands
-	const file = functions.getExtension(args);
-	// If the message is from a bot, or doesn't have the prefix or a file extension, stop here.
-	if ((!message.content.startsWith(prefix) && file[1] == undefined) || message.author.bot) return;
+	// Get the filename and extension as an array
+	// TODO Rename this function to something more appropriate
+	const file = functions.getFileInfo(message.content);
+	if (!file) return;
+	// If the message is from a bot, or doesn't have a valid file extension, stop here.
+	if (functions.extIsValid(file.extension) == false || message.author.bot) return;
 
-	// If the message starts with the prefix,
-	if (message.content.startsWith(prefix)) {
-		// Extract the command
-		const command = args.shift().toLowerCase().slice(prefix.length);
+	// If the command collection doesn't contain the given command, stop here.
+	if (!client.commands.has(file.extension)) return;
 
-		if (debug) console.log(args);
-		// If the command collection doesn't contain the given command, stop here.
-		if (!client.commands.has(command)) return;
-
-		try {
-			// Attempt to execute the command
-			client.commands.get(command).execute(message, args);
-		} catch (error) {
-			// Log errors and let the user know something went wrong.
-			console.error(error);
-			message.channel.send('There was an error trying to execute that command.');
-		}
-	}
-
-	// If there is a file extension
-	if (file[1] != undefined) {
-		const query = message.content.slice(0, -4);
-		switch (file[1]) {
-		case 'gif':
-			if (debug) console.log(query);
-
-			if (!client.gifs.has(file[0])) {
-				giphy.search(query, (err, res) => {
-					if (res.data[0] != undefined) {
-						message.channel.send(query + ' requested by ' + message.author.username + '\n' + res.data[0].embed_url).then().catch(console.error);
-					} else {
-						message.channel.send('I was unable to find a gif of ' + query);
-					}
-					if (err) console.error(err);
-				});
-			} else {
-				message.channel.send(query + ' requested by ' + message.author.username + '\n' + client.gifs.get(query).embed_url);
-			}
-			break;
-		case 'pasta':
-			// const pastaName = args[0].splice(args[0].search(/\.(?:.(?!\\))+$/gim))
-			if (debug) console.log(file[0]);
-
-			if (!client.pastas.has(file[0])) {
-				message.reply('Sorry I couldn\'t find that gif.');
-			} else {
-				message.channel.send(client.pastas.get(file[0]).content, { split: { char: ' ' } });
-			}
-			break;
-		default:
-			break;
-		}
+	try {
+		// Attempt to execute the command
+		client.commands.get(file.extension).execute(message, file);
+	} catch (error) {
+		// Log errors and let the user know something went wrong.
+		console.error(error);
+		message.channel.send('There was an error trying to execute that command.');
 	}
 
 	// Try to delete the requester's message

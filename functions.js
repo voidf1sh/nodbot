@@ -30,20 +30,30 @@ module.exports = {
 		}
 		if (debug) console.log(client.pastas);
 	},
-	getExtension(args) {
-		const finalWord = args[args.length - 1];
-		const file = finalWord.split('.');
+	getFileInfo(content) {
+		const finalPeriod = content.search(/\.(?:.(?!\\))+$/gim);
+		if (finalPeriod < 0) return false;
+		const extension = content.slice(finalPeriod).replace('.','').toLowerCase();
+		const filename = content.slice(0,finalPeriod).toLowerCase();
+		const file = {
+			'name': filename,
+			'extension': extension
+		};
+		console.log(finalPeriod, file);
 		return file;
 	},
-	extCheck(content) {
-		const lastFour = content.slice(-4);
-		switch (lastFour) {
-		case '.gif':
-			return 'gif';
-		case '.jpg':
-			return 'jpg';
-		case '.pst':
-			return 'pst';
+	extIsValid(extension) {
+		switch (extension) {
+		case 'gif':
+			return true;
+		case 'jpg':
+			return false;
+		case 'pasta':
+			return true;
+		case 'admin':
+			return true;
+		case 'spongebob':
+			return true;
 		default:
 			return false;
 		}
