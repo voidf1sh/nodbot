@@ -33,7 +33,6 @@ client.login(process.env.TOKEN);
 
 client.on('message', message => {
 	// Get the filename and extension as an array
-	// TODO Rename this function to something more appropriate
 	const file = functions.getFileInfo(message.content);
 	if (!file) return;
 	// If the message is from a bot, or doesn't have a valid file extension, stop here.

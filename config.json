@@ -3,5 +3,14 @@
 	"serverID": "760701839427108874",
 	"logChannel": "859249300894908447",
 	"bootMessage": "NodBot v2 Starting Up",
-	"shutdownMessage": "NodBot v2 Shutting Down"
+	"shutdownMessage": "NodBot v2 Shutting Down",
+	"validExtensions": [
+		"gif",
+		"pasta",
+		"help",
+		"spongebob",
+		"savepasta",
+		"request",
+		"savegif"
+	]
 }

@@ -1,16 +1,14 @@
-const { prefix } = require('../config.json');
-
 module.exports = {
 	name: 'help',
 	description: 'Shows the help page.',
-	execute(message, args) {
+	execute(message, file) {
 		const data = [];
 		const { commands } = message.client;
 
-		if (!args.length) {
+		if (!file.name) {
 			data.push('Here\'s a list of all my commands:');
 			data.push(commands.map(command => command.name).join(', '));
-			data.push(`\nYou can send \`${prefix}help [command name]\` to get info on a specific command!`);
+			data.push('\nYou can send `[command name].help` to get info on a specific command!');
 
 			return message.author.send(data, { split: true })
 				.then(() => {
@@ -19,15 +17,14 @@ module.exports = {
 				})
 				.catch(error => {
 					console.error(`Could not send help DM to ${message.author.tag}.\n`, error);
-					message.reply('it seems like I can\'t DM you! Do you have DMs disabled?');
+					message.reply('It seems like I can\'t DM you! Do you have DMs disabled?');
 				});
 		}
 
-		const name = args[0].toLowerCase();
-		const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
+		const command = commands.get(file.name) || commands.find(c => c.aliases && c.aliases.includes(file.name));
 
 		if (!command) {
-			return message.reply('that\'s not a valid command!');
+			return message.reply('That\'s not a valid command!');
 		}
 
 		data.push(`**Name:** ${command.name}`);

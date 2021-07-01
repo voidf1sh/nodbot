@@ -31,7 +31,8 @@ module.exports = {
 		if (debug) console.log(client.pastas);
 	},
 	getFileInfo(content) {
-		const finalPeriod = content.search(/\.(?:.(?!\\))+$/gim);
+		// const finalPeriod = content.search(/\.(?:.(?!\\))+$/gim);
+		const finalPeriod = content.lastIndexOf('.');
 		if (finalPeriod < 0) return false;
 		const extension = content.slice(finalPeriod).replace('.','').toLowerCase();
 		const filename = content.slice(0,finalPeriod).toLowerCase();
@@ -39,23 +40,10 @@ module.exports = {
 			'name': filename,
 			'extension': extension
 		};
-		console.log(finalPeriod, file);
 		return file;
 	},
 	extIsValid(extension) {
-		switch (extension) {
-		case 'gif':
-			return true;
-		case 'jpg':
-			return false;
-		case 'pasta':
-			return true;
-		case 'admin':
-			return true;
-		case 'spongebob':
-			return true;
-		default:
-			return false;
-		}
+		const extensions = require('./config.json').validExtensions;
+		return extensions.includes(extension);
 	}
 }
