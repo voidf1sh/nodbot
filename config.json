@@ -11,6 +11,11 @@
 		"spongebob",
 		"savepasta",
 		"request",
-		"savegif"
-	]
+		"savegif",
+		"truth",
+		"joint"
+	],
+	"emoji": {
+		"joint": "<:joint:862082955902976000>"
+	}
 }
