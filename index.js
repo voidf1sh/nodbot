@@ -5,9 +5,8 @@ dotenv.config();
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
-const debug = true;
 // const config = require('./config.json');
-const { prefix, logChannel, bootMessage, shutdownMessage } = require('./config.json');
+// const { prefix, logChannel, bootMessage, shutdownMessage } = require('./config.json');
 
 // const  owner = process.env.ownerID;
 const giphy = require('giphy-api')(process.env.giphyAPIKey);

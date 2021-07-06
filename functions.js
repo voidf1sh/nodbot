@@ -3,7 +3,6 @@ const fs = require('fs');
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 const gifFiles = fs.readdirSync('./gifs').filter(file => file.endsWith('.js'));
 const pastaFiles = fs.readdirSync('./pastas').filter(file => file.endsWith('.js'));
-const debug = true;
 
 module.exports = {
 	getCommandFiles(client) {
@@ -12,7 +11,6 @@ module.exports = {
 			const command = require(`./commands/${file}`);
 			client.commands.set(command.name, command);
 		}
-		if (debug) console.log(client.commands);
 	},
 	getGifFiles(client) {
 		client.gifs = new Discord.Collection();
@@ -20,7 +18,6 @@ module.exports = {
 			const gif = require(`./gifs/${file}`);
 			client.gifs.set(gif.name, gif);
 		}
-		if (debug) console.log(client.gifs);
 	},
 	getPastaFiles(client) {
 		client.pastas = new Discord.Collection();
@@ -28,7 +25,6 @@ module.exports = {
 			const pasta = require(`./pastas/${file}`);
 			client.pastas.set(pasta.name, pasta);
 		}
-		if (debug) console.log(client.pastas);
 	},
 	getFileInfo(content) {
 		// const finalPeriod = content.search(/\.(?:.(?!\\))+$/gim);
