@@ -1,6 +1,9 @@
 # NodBot
 A simple Discord bot created by @voidf1sh#0420 for retreiving gifs, saving copypastas, and more coming soon.
 
+## Dependancies
+NodBot depends on `fs`, `discord.js`, `dotenv`, and `giphy-api`.
+
 ## Features
 Dynamic Help Message
 Ability to save favorite gifs and copypastas

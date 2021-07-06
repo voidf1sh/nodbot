@@ -1,6 +1,7 @@
 module.exports = {
 	name: 'savegif',
 	description: 'Adds a given gif to the hardcoded list.',
+	usage: '<https://link.to.gif> <gif_name>',
 	execute(message, file) {
 		const tempArray = file.name.split(' ');
 		const embedURL = tempArray.shift();

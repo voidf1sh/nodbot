@@ -1,6 +1,7 @@
 module.exports = {
 	name: 'spongebob',
 	description: 'SpOnGeBoB-iFy AnYtHiNg AuToMaTiCaLly',
+	usage: '<text you want spongebob-ified',
 	execute(message, file) {
 		const replyHeader = `Requested by: ${message.author.username}\n`;
 		let flipper = 0;

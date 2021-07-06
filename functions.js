@@ -45,5 +45,16 @@ module.exports = {
 	extIsValid(extension) {
 		const extensions = require('./config.json').validExtensions;
 		return extensions.includes(extension);
+	},
+	cleanInput(input) {
+		return input.replace(/'/g, '\\\'').replace(/\n/g, '\\n');
+	},
+	createGifEmbed(data) {
+		return new Discord.MessageEmbed()
+			.setAuthor('NodBot v2 - GIF')
+			.setTitle(data.name)
+			.setImage(data.embed_url)
+			.setTimestamp()
+			.setFooter(data.requestor);
 	}
 }
