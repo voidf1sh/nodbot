@@ -1,80 +1,56 @@
 /* eslint-disable brace-style */
 // Variable Assignment
 const dotenv = require('dotenv');
+dotenv.config();
 const Discord = require('discord.js');
 const client = new Discord.Client();
+
+// const config = require('./config.json');
+// const { prefix, logChannel, bootMessage, shutdownMessage } = require('./config.json');
+
+// const  owner = process.env.ownerID;
 const giphy = require('giphy-api')(process.env.giphyAPIKey);
-const debug = false;
-const links = require('./links.json');
+const functions = require('./functions.js');
 
-dotenv.config();
-const owner = process.env.ownerID;
-
-if (debug) {
-	console.log(links);
-}
 
 client.once('ready', () => {
 	console.log('Ready');
+	client.user.setActivity('Nod Simulator 2021', { type: 'PLAYING' }).then().catch(console.error);
+	functions.getCommandFiles(client);
+	functions.getGifFiles(client);
+	functions.getPastaFiles(client);
+	// client.channels.fetch(logChannel)
+	// 	.then(channel => {
+	// 		channel.send(bootMessage)
+	// 			.then()
+	// 			.catch(err => console.error(err));
+	// 	})	
+	// 	.catch(err => console.error(err));
 });
 
 client.login(process.env.TOKEN);
 
 client.on('message', message => {
-	if (message.author.bot) return;
+	// Get the filename and extension as an array
+	const file = functions.getFileInfo(message.content);
+	if (!file) return;
+	// If the message is from a bot, or doesn't have a valid file extension, stop here.
+	if (functions.extIsValid(file.extension) == false || message.author.bot) return;
 
-	const pre = message.content.slice(0, -4);
-	const ext = message.content.slice(-4);
-	let gifFound = false;
+	// If the command collection doesn't contain the given command, stop here.
+	if (!client.commands.has(file.extension)) return;
 
-	switch (ext) {
-	case '.gif':
-		if (debug) {
-			console.log('pre: ' + pre);
-			console.log('ext: ' + ext);
-		}
-		for (let index = 0; index < links.gifs.length; index++) {
-			const gif = links.gifs[index];
-			if (gif.name == pre) {
-				message.channel.send(gif.embed_url);
-				gifFound = true;
-			}
-		}
-		if (gifFound == false) {
-			try {
-				giphy.search(pre, function(err, res) {
-					if (res.data[0] != undefined) {
-						message.channel.send(res.data[0].embed_url);
-					} else {
-						message.channel.send('Sorry, I was unable to find a gif of ' + pre + '.');
-					}
-					if (err) {
-						console.log(err);
-					}
-				});
-			} catch (error) {
-				console.log(error);
-			}
-		}
-		break;
-	// Admin Commands
-	case '.adm':
-		if (message.member.id == process.env.ownerID) {
-			switch (pre) {
-			case 'kill':
-				client.destroy();
-				process.exit();
-				break;
-			default:
-				break;
-			}
-		}
-		break;
-	case '.req':
-		message.channel.send('Feedback Submitted: ' + pre);
-		client.users.fetch(owner).then(user => { user.send('Feedback/Request: ' + pre);});
-		break;
-	default:
-		break;
+	try {
+		// Attempt to execute the command
+		client.commands.get(file.extension).execute(message, file);
+	} catch (error) {
+		// Log errors and let the user know something went wrong.
+		console.error(error);
+		message.channel.send('There was an error trying to execute that command.');
+	}
+
+	// Try to delete the requester's message
+	if (message.deletable) {
+		message.delete().then().catch(err => console.error(err));
 	}
 });
