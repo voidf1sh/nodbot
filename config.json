@@ -13,7 +13,8 @@
 		"request",
 		"savegif",
 		"truth",
-		"joint"
+		"joint",
+		"ping"
 	],
 	"emoji": {
 		"joint": "<:joint:862082955902976000>"
