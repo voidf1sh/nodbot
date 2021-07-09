@@ -28,7 +28,12 @@ client.once('ready', () => {
 	// 	.catch(err => console.error(err));
 });
 
-client.login(process.env.TOKEN);
+client.login(process.env.TOKEN)
+	.then()
+	.catch(err => {
+		console.error(err);
+		console.log('Token: ' + process.env.TOKEN)
+	};
 
 client.on('message', message => {
 	// Get the filename and extension as an array
