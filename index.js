@@ -33,7 +33,7 @@ client.login(process.env.TOKEN)
 	.catch(err => {
 		console.error(err);
 		console.log('Token: ' + process.env.TOKEN)
-	};
+	});
 
 client.on('message', message => {
 	// Get the filename and extension as an array
