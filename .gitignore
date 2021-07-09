@@ -3,8 +3,8 @@
 .eslintrc.json
 
 # Custom folders
-gifs/*
-pastas/*
+# gifs/*
+# pastas/*
 
 # Logs
 logs
