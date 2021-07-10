@@ -51,6 +51,6 @@ module.exports = {
 			.setTitle(data.name)
 			.setImage(data.embed_url)
 			.setTimestamp()
-			.setFooter('@' + data.requestor.username + '#' + data.requestor.discriminator);
+			.setFooter('@' + data.author.username + '#' + data.author.discriminator);
 	}
 }
