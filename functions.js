@@ -57,7 +57,7 @@ module.exports = {
 		fs.writeFile(`./gifs/${name}.js`, `module.exports = {\n\tname: '${name}',\n\tembed_url: '${embed_url}'\n}`, function(err) {
 			if (err) throw err;
 			console.log('Saved file!');
-			const gif = require(`../gifs/${name}.js`);
+			const gif = require(`./gifs/${name}.js`);
 			message.client.gifs.set(gif.name, gif);
 		});
 	}

@@ -25,7 +25,7 @@ module.exports = {
 			// message.channel.send(file.name + ' requested by ' + message.author.username + '\n' + client.gifs.get(file.name).embed_url);
 			const gifInfo = {
 				'name': file.name,
-				'embed_url': file.embed_url,
+				'embed_url': client.gifs.get(file.name).embed_url,
 				'author': message.author,
 			};
 			message.channel.send(functions.createGifEmbed(gifInfo));
