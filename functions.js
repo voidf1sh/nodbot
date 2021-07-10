@@ -52,5 +52,13 @@ module.exports = {
 			.setImage(data.embed_url)
 			.setTimestamp()
 			.setFooter('@' + data.author.username + '#' + data.author.discriminator);
+	},
+	saveGif(message, name, embed_url) {
+		fs.writeFile(`./gifs/${name}.js`, `module.exports = {\n\tname: '${name}',\n\tembed_url: '${embed_url}'\n}`, function(err) {
+			if (err) throw err;
+			console.log('Saved file!');
+			const gif = require(`../gifs/${name}.js`);
+			message.client.gifs.set(gif.name, gif);
+		});
 	}
 }
