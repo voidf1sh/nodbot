@@ -13,7 +13,7 @@ module.exports = {
 					const gifInfo = {
 						'name': file.name,
 						'embed_url': res.data[0].images.original.url,
-						'requestor': '@' + message.author.username + '#' + message.author.discriminator,
+						'author': message.author,
 					};
 					message.channel.send(functions.createGifEmbed(gifInfo));
 				} else {
