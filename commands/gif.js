@@ -26,7 +26,7 @@ module.exports = {
 			const gifInfo = {
 				'name': file.name,
 				'embed_url': file.embed_url,
-				'requestor': message.author.username + '#' + message.author.discriminator,
+				'author': message.author,
 			};
 			message.channel.send(functions.createGifEmbed(gifInfo));
 		}
