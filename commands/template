@@ -1,7 +1,9 @@
+const axios = require('axios').default;
+
 module.exports = {
-	name: '',
-	description: '',
-	execute(message, args) {
-		message.channel.send('');
+	name: 'strain',
+	description: 'Search for information about a cannabis strain. Powered by Otreeba',
+	execute(message, file) {
+		
 	}
 }
