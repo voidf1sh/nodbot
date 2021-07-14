@@ -1,3 +1,5 @@
+const functions = require('../functions.js');
+
 module.exports = {
 	name: 'pasta',
 	description: 'Send a copypasta.',
