@@ -28,7 +28,7 @@ module.exports = {
 				'embed_url': client.gifs.get(file.name).embed_url,
 				'author': message.author,
 			};
-			message.channel.send(functions.createGifEmbed(gifInfo));
+			message.channel.send(functions.createGifEmbed(gifInfo, message.author, `${file.name}.${file.extension}`));
 		}
 	}
 }

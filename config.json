@@ -16,7 +16,8 @@
 		"joint",
 		"ping",
 		"strain",
-		"airport"
+		"airport",
+		"weather"
 	],
 	"emoji": {
 		"joint": "<:joint:862082955902976000>",

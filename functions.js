@@ -45,13 +45,13 @@ module.exports = {
 	cleanInput(input) {
 		return input.replace(/'/g, '\\\'').replace(/\n/g, '\\n');
 	},
-	createGifEmbed(data) {
+	createGifEmbed(data, author, command) {
 		return new Discord.MessageEmbed()
 			.setAuthor('NodBot v2 - GIF')
-			.setTitle(data.name)
+			.setTitle(command)
 			.setImage(data.embed_url)
 			.setTimestamp()
-			.setFooter('@' + data.author.username + '#' + data.author.discriminator);
+			.setFooter(`@${author.username}#${author.discriminator}`);
 	},
 	saveGif(message, name, embed_url) {
 		fs.writeFile(`./gifs/${name}.js`, `module.exports = {\n\tname: '${name}',\n\tembed_url: '${embed_url}'\n}`, function(err) {
@@ -61,10 +61,10 @@ module.exports = {
 			message.client.gifs.set(gif.name, gif);
 		});
 	},
-	createAirportEmbed(data, author) {
+	createAirportEmbed(data, author, command) {
 		const airport = data.airport[0];
 		return new Discord.MessageEmbed()
-			.setAuthor('Airport Information')
+			.setAuthor(command)
 			.setTitle(airport.airport_name)
 			.addFields(
 				{ name: 'Location', value: `${airport.city}, ${airport.state_abbrev}`, inline: true },
@@ -74,5 +74,22 @@ module.exports = {
 			)
 			.setTimestamp()
 			.setFooter(`@${author.username}#${author.discriminator}`);
-	}
+	},
+	createWeatherEmbed(data, author, command) {
+		const loc = data.location;
+		const weather = data.current;
+		return new Discord.MessageEmbed()
+			.setAuthor(command)
+			.setTitle(`${loc.name}, ${loc.region}, ${loc.country} Weather`)
+			.setDescription(`The weather is currently ${weather.condition.text}`)
+			.addFields(
+				{ name: 'Temperature', value: `${weather.temp_f}°F (Feels like: ${weather.feelslike_f}°F)`, inline: true },
+				{ name: 'Winds', value: `${weather.wind_mph} ${weather.wind_dir}`, inline: true },
+				{ name: 'Pressure', value: `${weather.pressure_in}inHg`, inline: true },
+				{ name: 'Relative Humidity', value: `${weather.humidity}%`, inline: true }
+			)
+			.setImage(`https:${weather.condition.icon}`)
+			.setTimestamp()
+			.setFooter(`@${author.username}#${author.discriminator}`);
+		}
 }

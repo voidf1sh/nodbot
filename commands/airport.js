@@ -17,7 +17,7 @@ module.exports = {
 	execute(message, file) {
 		options.params.airport_id = file.name;
 		axios.request(options).then(function (response) {
-			const embed = functions.createAirportEmbed(response.data, message.author);
+			const embed = functions.createAirportEmbed(response.data, message.author, `${file.name}.${file.extension}`);
 			message.channel.send(embed).then().catch(err => console.error(err));
 		}).catch(function (error) {
 			console.error(error);
