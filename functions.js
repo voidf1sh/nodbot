@@ -97,5 +97,12 @@ module.exports = {
 			.setDescription(data.content)
 			.setTimestamp()
 			.setFooter(`@${author.username}#${author.discriminator}`);
+	},
+	createStockEmbed(data, author, command) {
+		return new Discord.MessageEmbed()
+			.setAuthor(command)
+			.setTitle()
+			.setTimestamp()
+			.setFooter(`@${author.username}#${author.discriminator}`);
 	}
 }
