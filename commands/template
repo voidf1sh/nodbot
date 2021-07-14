@@ -1,8 +1,6 @@
-const axios = require('axios').default;
-
 module.exports = {
-	name: 'strain',
-	description: 'Search for information about a cannabis strain. Powered by Otreeba',
+	name: '',
+	description: '',
 	execute(message, file) {
 		
 	}

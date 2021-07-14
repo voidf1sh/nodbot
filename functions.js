@@ -60,5 +60,19 @@ module.exports = {
 			const gif = require(`./gifs/${name}.js`);
 			message.client.gifs.set(gif.name, gif);
 		});
+	},
+	createAirportEmbed(data, author) {
+		const airport = data.airport[0];
+		return new Discord.MessageEmbed()
+			.setAuthor('Airport Information')
+			.setTitle(airport.airport_name)
+			.addFields(
+				{ name: 'Location', value: `${airport.city}, ${airport.state_abbrev}`, inline: true },
+				{ name: 'Coordinates', value: `${airport.latitude}, ${airport.longitude}`, inline: true },
+				{ name: 'Elevation', value: `${airport.elevation}ft`, inline: true },
+				{ name: 'More Information', value: airport.link_path }
+			)
+			.setTimestamp()
+			.setFooter(`@${author.username}#${author.discriminator}`);
 	}
 }
