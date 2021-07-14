@@ -26,6 +26,7 @@ client.once('ready', () => {
 	// 			.catch(err => console.error(err));
 	// 	})	
 	// 	.catch(err => console.error(err));
+	client.users.fetch(process.env.ownerID)
 });
 
 client.login(process.env.TOKEN)

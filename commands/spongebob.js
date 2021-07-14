@@ -1,9 +1,10 @@
+const functions = require('../functions.js');
+
 module.exports = {
 	name: 'spongebob',
 	description: 'SpOnGeBoB-iFy AnYtHiNg AuToMaTiCaLly',
 	usage: '<text you want spongebob-ified',
 	execute(message, file) {
-		const replyHeader = `Requested by: ${message.author.username}\n`;
 		let flipper = 0;
 		let newText = '';
 		for (const letter of file.name) {
@@ -15,6 +16,6 @@ module.exports = {
 				flipper = 0;
 			}
 		}
-		message.channel.send(replyHeader + newText);
+		message.channel.send(functions.createTextEmbed({ content: newText }, message.author, `${file.name}.${file.extension}`));
 	}
 }

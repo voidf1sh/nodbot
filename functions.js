@@ -90,5 +90,12 @@ module.exports = {
 			.setThumbnail(`https:${weather.condition.icon}`)
 			.setTimestamp()
 			.setFooter(`@${author.username}#${author.discriminator}`);
-		}
+	},
+	createTextEmbed(data, author, command) {
+		return new Discord.MessageEmbed()
+			.setAuthor(command)
+			.setDescription(data.content)
+			.setTimestamp()
+			.setFooter(`@${author.username}#${author.discriminator}`);
+	}
 }
