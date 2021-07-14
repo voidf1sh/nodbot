@@ -1,45 +1,41 @@
-/* eslint-disable brace-style */
 // Variable Assignment
+// Environment Variable Setup
 const dotenv = require('dotenv');
 dotenv.config();
+// Discord.js library
 const Discord = require('discord.js');
+// Create the client
 const client = new Discord.Client();
-
-// const config = require('./config.json');
-// const { prefix, logChannel, bootMessage, shutdownMessage } = require('./config.json');
-
-// const  owner = process.env.ownerID;
-const giphy = require('giphy-api')(process.env.giphyAPIKey);
+// External Functions File
 const functions = require('./functions.js');
 
-
+// Once the client is logged in and ready
 client.once('ready', () => {
 	console.log('Ready');
+	// This sets the activity that shows below the bot's name in the member/friend list
 	client.user.setActivity('Nod Simulator 2021', { type: 'PLAYING' }).then().catch(console.error);
+	// Import the Command, GIF, and Pasta files into collections
 	functions.getCommandFiles(client);
 	functions.getGifFiles(client);
 	functions.getPastaFiles(client);
-	// client.channels.fetch(logChannel)
-	// 	.then(channel => {
-	// 		channel.send(bootMessage)
-	// 			.then()
-	// 			.catch(err => console.error(err));
-	// 	})	
-	// 	.catch(err => console.error(err));
+	// Get the owner and DM them a message that the bot is ready, useful for remote deployment
 	client.users.fetch(process.env.ownerID).then(user => {
 		user.createDM().then(channel => {
-			channel.send('I\'m awake.');
+			channel.send('Ready');
 		});
 	});
 });
 
+// Log into discord using the TOKEN provided by environment variables (.env)
 client.login(process.env.TOKEN)
 	.then()
 	.catch(err => {
 		console.error(err);
+		// Dump the TOKEN into the console as the TOKEN is likely the cause of any error logging in, unless Discord servers are down.
 		console.log('Token: ' + process.env.TOKEN)
 	});
 
+// This runs on each message the bot sees
 client.on('message', message => {
 	// Get the filename and extension as an array
 	const file = functions.getFileInfo(message.content);
