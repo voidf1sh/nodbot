@@ -87,7 +87,7 @@ module.exports = {
 				{ name: 'Pressure', value: `${weather.pressure_in}inHg`, inline: true },
 				{ name: 'Relative Humidity', value: `${weather.humidity}%`, inline: true }
 			)
-			.setImage(`https:${weather.condition.icon}`)
+			.setThumbnail(`https:${weather.condition.icon}`)
 			.setTimestamp()
 			.setFooter(`@${author.username}#${author.discriminator}`);
 		}
