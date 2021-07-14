@@ -12,10 +12,9 @@ module.exports = {
 					// message.channel.send(file.name + ' requested by ' + message.author.username + '\n' + res.data[0].embed_url).then().catch(console.error);
 					const gifInfo = {
 						'name': file.name,
-						'embed_url': res.data[0].images.original.url,
-						'author': message.author,
+						'embed_url': res.data[0].images.original.url
 					};
-					message.channel.send(functions.createGifEmbed(gifInfo));
+					message.channel.send(functions.createGifEmbed(gifInfo, message.author, `${file.name}.${file.extension}`));
 				} else {
 					message.channel.send('I was unable to find a gif of ' + file.name);
 				}
@@ -25,8 +24,7 @@ module.exports = {
 			// message.channel.send(file.name + ' requested by ' + message.author.username + '\n' + client.gifs.get(file.name).embed_url);
 			const gifInfo = {
 				'name': file.name,
-				'embed_url': client.gifs.get(file.name).embed_url,
-				'author': message.author,
+				'embed_url': client.gifs.get(file.name).embed_url
 			};
 			message.channel.send(functions.createGifEmbed(gifInfo, message.author, `${file.name}.${file.extension}`));
 		}

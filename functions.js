@@ -47,8 +47,7 @@ module.exports = {
 	},
 	createGifEmbed(data, author, command) {
 		return new Discord.MessageEmbed()
-			.setAuthor('NodBot v2 - GIF')
-			.setTitle(command)
+			.setAuthor(command)
 			.setImage(data.embed_url)
 			.setTimestamp()
 			.setFooter(`@${author.username}#${author.discriminator}`);
