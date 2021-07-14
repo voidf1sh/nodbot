@@ -26,7 +26,11 @@ client.once('ready', () => {
 	// 			.catch(err => console.error(err));
 	// 	})	
 	// 	.catch(err => console.error(err));
-	client.users.fetch(process.env.ownerID)
+	client.users.fetch(process.env.ownerID).then(user => {
+		user.createDM().then(channel => {
+			channel.send('I\'m awake.');
+		});
+	});
 });
 
 client.login(process.env.TOKEN)
