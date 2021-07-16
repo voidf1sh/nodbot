@@ -48,6 +48,7 @@ module.exports = {
 	createGifEmbed(data, author, command) {
 		return new Discord.MessageEmbed()
 			.setAuthor(command)
+			.setDescription(data.embed_url)
 			.setImage(data.embed_url)
 			.setTimestamp()
 			.setFooter(`@${author.username}#${author.discriminator}`);

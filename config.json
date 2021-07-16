@@ -17,7 +17,10 @@
 		"ping",
 		"strain",
 		"airport",
-		"weather"
+		"weather",
+		"oldgif",
+		"newgif",
+		"newpng"
 	],
 	"emoji": {
 		"joint": "<:joint:862082955902976000>",
