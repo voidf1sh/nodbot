@@ -22,11 +22,11 @@ foobar.spongebob - Returns 'FoObAr' aka SpongeBob text
 ```
 
 ## To Do
-Clean up text input for copypastas, line breaks and apostrophes break the bot.
-Add ability to reload commands, gifs, pastas, etc without rebooting the bot manually.
-Change `savepasta` to use a collector and ask for the name or the pasta.
-Add Stock quotes from Yahoo Finance API
-Add self-delete if wrongbad'd
-Move most string literals to config.json or strings.json for ease of editing.
-Make construction of the `data` element easier for the createEmbeds functions.
-Find a Cannabis API for strain information lookup.
+Clean up text input for copypastas, line breaks and apostrophes break the bot.  
+Add ability to reload commands, gifs, pastas, etc without rebooting the bot manually.  
+Change `savepasta` to use a collector and ask for the name or the pasta.  
+Add Stock quotes from Yahoo Finance API  
+Add self-delete if wrongbad'd  
+Move most string literals to config.json or strings.json for ease of editing.  
+Make construction of the `data` element easier for the createEmbeds functions.  
+Find a Cannabis API for strain information lookup.  
