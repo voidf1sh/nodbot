@@ -60,6 +60,16 @@ module.exports = {
 			message.client.gifs.set(gif.name, gif);
 		});
 	},
+	savePasta(message, name, content) {
+		fs.writeFile(`./pastas/${name}.js`, `module.exports = {\n\tname: '${name}',\n\tcontent: '${content}'\n}`, function(err) {
+			if (err) {
+				return `There was a problem saving the copypasta.`;
+			}
+			const pasta = require(`./pastas/${name}.js`);
+			message.client.pastas.set(pasta.name, pasta);
+		});
+		return `Copypasta saved successfully as ${name}.pasta`;
+	},
 	createAirportEmbed(data, author, command) {
 		const airport = data.airport[0];
 		return new Discord.MessageEmbed()
