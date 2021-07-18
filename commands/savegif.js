@@ -1,4 +1,10 @@
-const giphy = require('giphy-api')(process.env.giphyAPIKey);
+const tenor = require('tenorjs').client({
+    "Key": process.env.tenorAPIKey, // https://tenor.com/developer/keyregistration
+    "Filter": "off", // "off", "low", "medium", "high", not case sensitive
+    "Locale": "en_US", // Your locale here, case-sensitivity depends on input
+    "MediaFilter": "minimal", // either minimal or basic, not case sensitive
+    "DateFormat": "D/MM/YYYY - H:mm:ss A" // Change this accordingly
+});
 const functions = require('../functions');
 const { emoji } = require('../config.json');
 
@@ -9,17 +15,16 @@ module.exports = {
 	execute(message, file) {
 		const channel = message.channel;
 		const query = file.name;
-		giphy.search(query)
+		tenor.Search.Query(query, 20)
 			.then(res => {
-				if (res.data == undefined) return;
-				if (res.data[0] == undefined) {
+				if (res[0] == undefined) {
 					channel.send('Sorry, I wasn\'t able to find a GIF of ' + file.name);
 					return;
 				}
 				let i = 0; 
 				const data = {
 					"name": file.name,
-					"embed_url": res.data[i].images.original.url,
+					"embed_url": res[0].media[0].gif.url,
 					"author": message.author
 				};
 				let embed = functions.createGifEmbed(data, message.author, `${Object.values(file).join('.')}`);
@@ -42,8 +47,13 @@ module.exports = {
 						collector.on('collect', (reaction, user) => {
 							switch (reaction.emoji.name) {
 								case emoji.next:
-									i++;
-									data.embed_url = res.data[i].images.original.url;
+									if (i < res.length) {
+										i++;
+									} else {
+										selfMessage.channel.send('That\'s the last GIF, sorry!');
+										break;
+									}
+									data.embed_url = res[i].media[0].gif.url;
 									embed = functions.createGifEmbed(data, message.author, `${file.name}.${file.extension}`);
 									if (selfMessage.editable) {
 										selfMessage.edit(embed);
@@ -60,11 +70,15 @@ module.exports = {
 												functions.saveGif(message, nameMessage.content, data.embed_url);
 											});
 										});
-									
 									break;
 								case emoji.previous:
-									i--;
-									data.embed_url = res.data[i].images.original.url;
+									if (i > 0) {
+										i--;
+									} else {
+										selfMessage.channel.send('That\'s the first GIF, can\'t go back any further!');
+										break;
+									}
+									data.embed_url = res[i].media[0].gif.url;
 									embed = functions.createGifEmbed(data, message.author, `${file.name}.${file.extension}`);
 									if (selfMessage.editable) {
 										selfMessage.edit(embed);

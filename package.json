@@ -8,7 +8,8 @@
     "discord.js": "^12.5.3",
     "dotenv": "^10.0.0",
     "giphy-api": "^2.0.2",
-    "nodemon": "^2.0.9"
+    "nodemon": "^2.0.9",
+    "tenorjs": "^1.0.8"
   },
   "devDependencies": {
     "eslint": "^7.29.0"
