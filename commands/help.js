@@ -6,6 +6,20 @@ module.exports = {
 		const { commands } = message.client;
 
 		if (!file.name) {
+			// const helpStructure = {
+			// 	commands = [
+			// 		{
+			// 			name: commandName,
+			// 			aliases: commandAliases,
+			// 			description: commandDescription,
+			// 			usage: commandUsage,
+			// 			cooldown: commandCooldown
+			// 		}
+			// 	]
+			// };
+
+			
+
 			data.push('Here\'s a list of all my commands:');
 			data.push(commands.map(command => command.name).join(', '));
 			data.push('\nYou can send `[command name].help` to get info on a specific command!');

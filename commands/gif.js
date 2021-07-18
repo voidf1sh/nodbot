@@ -1,6 +1,6 @@
 const functions = require('../functions');
-
 const giphy = require('giphy-api')(process.env.giphyAPIKey);
+
 module.exports = {
 	name: 'gif',
 	description: 'Send a GIF',

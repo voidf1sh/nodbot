@@ -20,7 +20,8 @@
 		"weather",
 		"oldgif",
 		"newgif",
-		"newpng"
+		"newpng",
+		"mapcommands"
 	],
 	"emoji": {
 		"joint": "<:joint:862082955902976000>",

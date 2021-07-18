@@ -115,5 +115,23 @@ module.exports = {
 			.setTitle()
 			.setTimestamp()
 			.setFooter(`@${author.username}#${author.discriminator}`);
+	},
+	mapCommands(client) {
+		const { commands } = client;
+		// return new Promise((resolve, reject) => {
+		// 	let commandMap = []
+		// 	for (const [key, value] of commands.map()) {
+		// 		// commandMap.push({
+		// 		// 	name: command.name,
+		// 		// 	aliases: command.aliases,
+		// 		// 	description: command.description,
+		// 		// 	usage: command.usage,
+		// 		// 	cooldown: 0					// Set to 0 for now for the sake of simple code, will add cooldowns later
+		// 		// });
+		// 	}
+		// });
+		for (const entry of commands.map(command => [command.name, command.description, command.syntax])) {
+			console.log(entry);
+		}
 	}
 }
