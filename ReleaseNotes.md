@@ -1,6 +1,8 @@
 # Release Notes
 
 ## v2.1.0
+Wondering what GIFs and Copypastas have been saved? Try `.gifs` and `.pastas`, also check out the new help message with `.help`!
+
 NodBot now uses Tenor instead of Giphy for GIF searches!
 
 Changing the method to search for and save GIFs for later reuse. Previously the bot simply sent a message containing the link to a GIF which Discord would display in the chat. However the new code uses Embeds to make the messages look prettier. These Embeds require a *direct* link to the GIF, which isn't very user friendly. Now you can search for a GIF and NodBot will DM you with results for you to browse before choosing the GIF you'd like to save, then name it.

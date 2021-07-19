@@ -18,6 +18,7 @@ client.once('ready', () => {
 	functions.getCommandFiles(client);
 	functions.getGifFiles(client);
 	functions.getPastaFiles(client);
+	functions.setValidExtensions(client);
 	// Get the owner and DM them a message that the bot is ready, useful for remote deployment
 	client.users.fetch(process.env.ownerID).then(user => {
 		user.createDM().then(channel => {

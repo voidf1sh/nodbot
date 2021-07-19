@@ -3,8 +3,14 @@ const fs = require('fs');
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 const gifFiles = fs.readdirSync('./gifs').filter(file => file.endsWith('.js'));
 const pastaFiles = fs.readdirSync('./pastas').filter(file => file.endsWith('.js'));
+const config = require('./config.json');
 
 module.exports = {
+	setValidExtensions(client) {
+		for (const entry of client.commands.map(command => command.name)) {
+			config.validExtensions.push(entry);
+		}
+	},
 	getCommandFiles(client) {
 		client.commands = new Discord.Collection();
 		for (const file of commandFiles) {
@@ -149,5 +155,33 @@ module.exports = {
 			.setDescription('All commands are provided as "file extensions" instead of prefixes to the message.')
 			.addFields(fields)
 			.setTimestamp();
+	},
+	createGIFList(message) {
+		let list = [];
+		const { gifs } = message.client;
+		for (const entry of gifs.map(gif => [gif.name])) {
+			list.push(entry[0] + '.gif');
+		}
+
+		return new Discord.MessageEmbed()
+			.setAuthor('NodBot GIF List')
+			.setTitle('List of Currently Saved GIFs')
+			.setDescription(list.join('\n'))
+			.setTimestamp()
+			.setFooter(`@${message.author.username}#${message.author.discriminator}`);
+	},
+	createPastaList(message) {
+		let list = [];
+		const { pastas } = message.client;
+		for (const entry of pastas.map(pasta => [pasta.name])) {
+			list.push(entry[0] + '.pasta');
+		}
+
+		return new Discord.MessageEmbed()
+			.setAuthor('NodBot Pasta List')
+			.setTitle('List of Currently Saved Copypastas')
+			.setDescription(list.join('\n'))
+			.setTimestamp()
+			.setFooter(`@${message.author.username}#${message.author.discriminator}`);
 	}
 }
