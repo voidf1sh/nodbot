@@ -19,7 +19,7 @@ module.exports = {
 					'name': file.name,
 					'embed_url': res[0].media[0].gif.url
 				};
-				message.channel.send(functions.createGifEmbed(gifInfo, message.author, `${file.name}.${file.extension}`));
+				message.channel.send(functions.createGifEmbed(gifInfo, message.author, `${file.name}.${file.extension} - Tenor`));
 			})
 			.catch(err => console.error(err));
 		} else {
@@ -28,7 +28,7 @@ module.exports = {
 				'name': file.name,
 				'embed_url': client.gifs.get(file.name).embed_url
 			};
-			message.channel.send(functions.createGifEmbed(gifInfo, message.author, `${file.name}.${file.extension}`));
+			message.channel.send(functions.createGifEmbed(gifInfo, message.author, `${file.name}.${file.extension} - Saved`));
 		}
 	}
 }
