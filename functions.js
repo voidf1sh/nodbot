@@ -48,7 +48,6 @@ module.exports = {
 	createGifEmbed(data, author, command) {
 		return new Discord.MessageEmbed()
 			.setAuthor(command)
-			.setDescription(data.embed_url)
 			.setImage(data.embed_url)
 			.setTimestamp()
 			.setFooter(`@${author.username}#${author.discriminator}`);
@@ -105,6 +104,7 @@ module.exports = {
 	createTextEmbed(data, author, command) {
 		return new Discord.MessageEmbed()
 			.setAuthor(command)
+			.setDescription(data.content)
 			.setTimestamp()
 			.setFooter(`@${author.username}#${author.discriminator}`);
 	},
