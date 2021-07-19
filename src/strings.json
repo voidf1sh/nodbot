@@ -9,5 +9,12 @@
 		"You're gonna be doing a lot of doobie rollin' when you're living in a ran down by the river!",
 		"You'll have plenty of time to live in a van down by the river... when you're living in a van down by the river!",
 		"Roll, roll, roll my joint, pick out the seeds and stems"
-	]
+	],
+	"emoji": {
+		"joint": "<:joint:862082955902976000>",
+		"next": "⏭️",
+		"previous": "⏮️",
+		"confirm": "☑️",
+		"cancel": "❌"
+	}
 }
