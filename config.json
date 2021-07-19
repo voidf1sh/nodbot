@@ -1,14 +1,3 @@
 {
-	"prefix": "/",
-	"serverID": "760701839427108874",
-	"logChannel": "859249300894908447",
-	"bootMessage": "NodBot v2 Starting Up",
-	"shutdownMessage": "NodBot v2 Shutting Down",
-	"validExtensions": [],
-	"emoji": {
-		"joint": "<:joint:862082955902976000>",
-		"next": "⏭️",
-		"previous": "⏮️",
-		"confirm": "☑️"
-	}
+	"validExtensions": []
 }

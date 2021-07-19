@@ -1,5 +1,4 @@
-const { emoji } = require('../config.json');
-const { weed } = require('../src/strings.json');
+const { emoji, weed } = require('../src/strings.json');
 
 module.exports = {
 	name: 'joint',
