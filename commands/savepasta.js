@@ -2,8 +2,8 @@ const functions = require('../functions.js');
 
 module.exports = {
 	name: 'savepasta',
-	description: 'Adds a given copypasta to the hardcoded list.',
-	usage: '<Copy Pasta Text> <pasta_name>',
+	description: 'Saves a copypasta as pasta_name.pasta, just send the pasta name on the first message, and the bot will ask for the actual pasta afterwards.',
+	usage: '<Pasta Name>',
 	execute(message, file) {
 		message.channel.send(`I'll be saving the next message you send as ${file.name}.pasta\nWhat is the content of the copypasta?`)
 			.then(promptMessage => {

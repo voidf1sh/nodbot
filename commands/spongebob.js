@@ -3,7 +3,7 @@ const functions = require('../functions.js');
 module.exports = {
 	name: 'spongebob',
 	description: 'SpOnGeBoB-iFy AnYtHiNg AuToMaTiCaLly',
-	usage: '<text you want spongebob-ified',
+	usage: '<text to convert>',
 	execute(message, file) {
 		let flipper = 0;
 		let newText = '';

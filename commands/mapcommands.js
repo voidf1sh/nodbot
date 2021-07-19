@@ -4,6 +4,6 @@ module.exports = {
 	name: 'mapcommands',
 	description: '',
 	execute(message, file) {
-		console.log(functions.mapCommands(message.client));
+		console.log(functions.mapCommands(message));
 	}
 }

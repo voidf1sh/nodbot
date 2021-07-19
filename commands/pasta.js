@@ -3,6 +3,7 @@ const functions = require('../functions.js');
 module.exports = {
 	name: 'pasta',
 	description: 'Send a copypasta.',
+	usage: '<Copypasta Name>',
 	execute(message, file) {
 		const client = message.client;
 		const replyHeader = `\'${file.name}\' requested by: ${message.author.username}\n`;

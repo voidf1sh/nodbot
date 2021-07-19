@@ -14,6 +14,7 @@ var options = {
 module.exports = {
 	name: 'weather',
 	description: 'Get the current weather by ZIP code or city name.',
+	usage: '<ZIP code, City Name, etc>',
 	execute(message, file) {
 		options.params.q = file.name;
 		axios.request(options).then(function (response) {

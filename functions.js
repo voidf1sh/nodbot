@@ -115,22 +115,39 @@ module.exports = {
 			.setTimestamp()
 			.setFooter(`@${author.username}#${author.discriminator}`);
 	},
-	mapCommands(client) {
-		const { commands } = client;
-		// return new Promise((resolve, reject) => {
-		// 	let commandMap = []
-		// 	for (const [key, value] of commands.map()) {
-		// 		// commandMap.push({
-		// 		// 	name: command.name,
-		// 		// 	aliases: command.aliases,
-		// 		// 	description: command.description,
-		// 		// 	usage: command.usage,
-		// 		// 	cooldown: 0					// Set to 0 for now for the sake of simple code, will add cooldowns later
-		// 		// });
-		// 	}
-		// });
-		for (const entry of commands.map(command => [command.name, command.description, command.syntax])) {
-			console.log(entry);
+	createHelpEmbed(message) {
+		const { commands } = message.client;
+		let fields = [];
+		for (const entry of commands.map(command => [command.name, command.description, command.usage])) {
+			const name = entry[0];
+			const description = entry[1];
+			let usage;
+			if (entry[2] == undefined) {
+				usage = '';
+			} else {
+				usage = entry[2];
+			}
+			const excludeList = [
+				'kill',
+				'mapcommands',
+				'newgif',
+				'newpng',
+				'oldgif',
+				'strain',
+				'stonk',
+				'wrongbad'
+			];
+			if (excludeList.includes(name)) continue;
+			fields.push({
+				name: name,
+				value: `${description}\n**Usage:** \`${usage}.${name}\``
+			});
 		}
+		
+		return new Discord.MessageEmbed()
+			.setAuthor('NodBot Help')
+			.setDescription('All commands are provided as "file extensions" instead of prefixes to the message.')
+			.addFields(fields)
+			.setTimestamp();
 	}
 }

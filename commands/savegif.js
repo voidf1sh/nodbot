@@ -10,7 +10,7 @@ const { emoji } = require('../config.json');
 
 module.exports = {
 	name: 'savegif',
-	description: 'Adds a given gif to the hardcoded list.',
+	description: 'Saves a gif selected from a search to a given filename.',
 	usage: '<search query>',
 	execute(message, file) {
 		const query = file.name;

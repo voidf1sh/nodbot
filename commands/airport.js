@@ -14,6 +14,7 @@ let options = {
 module.exports = {
 	name: 'airport',
 	description: 'Get airport information by IATA code.',
+	usage: '<IATA>',
 	execute(message, file) {
 		options.params.airport_id = file.name;
 		axios.request(options).then(function (response) {
