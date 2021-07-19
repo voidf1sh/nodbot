@@ -16,6 +16,6 @@ module.exports = {
 				flipper = 0;
 			}
 		}
-		message.channel.send(functions.createTextEmbed({ content: newText }, message.author, `.${file.extension}`));
+		message.channel.send(`@${message.author.username}: ${newText}`);
 	}
 }
