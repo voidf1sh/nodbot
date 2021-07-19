@@ -13,9 +13,9 @@ module.exports = {
 	description: 'Adds a given gif to the hardcoded list.',
 	usage: '<search query>',
 	execute(message, file) {
-		const channel = message.channel;
 		const query = file.name;
-		tenor.Search.Query(query, 20)
+		message.author.createDM().then(channel => {
+			tenor.Search.Query(query, 20)
 			.then(res => {
 				if (res[0] == undefined) {
 					channel.send('Sorry, I wasn\'t able to find a GIF of ' + file.name);
@@ -92,5 +92,6 @@ module.exports = {
 					}).catch(err => console.error(err));
 			})
 			.catch(err => console.error(err));
+		})
 	}
 }
