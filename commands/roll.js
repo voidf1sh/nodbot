@@ -11,7 +11,7 @@ module.exports = {
 		fs.writeFile('./src/strings.json', JSON.stringify(strings), err => {
 			if (err) throw err;
 
-			message.channel.send('It has been added to the list');
+			message.channel.send('"' + file.name + '" has been added to the list');
 		})
 	}
 }
