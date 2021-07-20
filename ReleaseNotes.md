@@ -1,6 +1,8 @@
 # Release Notes
 
 ## v2.1.0
+Want to add a phrase to the `.joint` rotation? Try `<phrase>.roll`.
+
 Wondering what GIFs and Copypastas have been saved? Try `.gifs` and `.pastas`, also check out the new help message with `.help`!
 
 NodBot now uses Tenor instead of Giphy for GIF searches!
