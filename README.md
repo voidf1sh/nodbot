@@ -22,6 +22,12 @@ foobar.spongebob - Returns 'FoObAr' aka SpongeBob text
 ```
 
 ## To Do
+v3 TODO:
+Create database for storage of gifs, pastas, joint phrases, etc.
+Migrate to Discord.js v13 Beta
+Implement Replies to messages
+Implement buttons in lieu of Reacts
+
 DONE: Clean up text input for copypastas, line breaks and apostrophes break the bot.
 Add ability to reload commands, gifs, pastas, etc without rebooting the bot manually.
 DONE: Change `savepasta` to use a collector and ask for the name or the pasta.
