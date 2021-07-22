@@ -1,14 +1,12 @@
-const { weed } = require('../src/strings.json');
-
 module.exports = {
 	name: 'joints',
 	description: 'Get a list of the phrases saved for .joint',
 	execute(message, file) {
-		let data = [];
+		let phrases = [];
 
-		for (const phrase of weed) {
-			data.push(phrase);
+		for (const phrase of message.client.potphrases.map(potphrase => potphrase.content)) {
+			phrases.push(phrase);
 		}
-		message.channel.send('Here are all the `.joint` phrases I have saved:\n\n' + data.join('\n'));
+		message.channel.send('Here are all the `.joint` phrases I have saved:\n\n' + phrases.join('\n'));
 	}
 }

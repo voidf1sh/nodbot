@@ -1,9 +1,17 @@
 const Discord = require('discord.js');
 const fs = require('fs');
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-const gifFiles = fs.readdirSync('./gifs').filter(file => file.endsWith('.js'));
-const pastaFiles = fs.readdirSync('./pastas').filter(file => file.endsWith('.js'));
 const config = require('./config.json');
+const pg = require('pg');
+let dbConnected = false;
+const db = new pg.Client({
+	connectionString: process.env.DATABASE_URL,
+	ssl: {
+		rejectUnauthorized: false
+	}
+});
+
+db.connect();
 
 module.exports = {
 	setValidExtensions(client) {
@@ -20,20 +28,61 @@ module.exports = {
 	},
 	getGifFiles(client) {
 		client.gifs = new Discord.Collection();
-		for (const file of gifFiles) {
-			const gif = require(`./gifs/${file}`);
-			client.gifs.set(gif.name, gif);
-		}
+
+		const query = "SELECT name, embed_url FROM gifs";
+		return new Promise((resolve, reject) => {
+			db.query(query)
+				.then(res => {
+					for (let row of res.rows) {
+						const gif = {
+							name: row.name,
+							embed_url: row.embed_url
+						};
+						client.gifs.set(gif.name, gif);
+					}
+					resolve();
+				})
+				.catch(err => console.error(err));
+		});
+	},
+	getPotPhrases(client) {
+		client.potphrases = new Discord.Collection();
+
+		const query = "SELECT id, content FROM potphrases";
+		db.query(query)
+			.then(res => {
+				for (let row of res.rows) {
+					const potphrase = {
+						id: row.id,
+						content: row.content
+					};
+					client.potphrases.set(potphrase.id, potphrase);
+				}
+			})
+			.catch(err => console.error(err));
 	},
 	getPastaFiles(client) {
 		client.pastas = new Discord.Collection();
-		for (const file of pastaFiles) {
-			const pasta = require(`./pastas/${file}`);
-			client.pastas.set(pasta.name, pasta);
-		}
+		
+		const query = "SELECT name, content FROM pastas";
+		return new Promise((resolve, reject) => {
+			db.query(query)
+			.then(res => {
+				for (let row of res.rows) {
+					const pasta = {
+						name: row.name,
+						content: row.content
+					};
+					client.pastas.set(pasta.name, pasta);
+				}
+				resolve();
+			})
+			.catch(err => console.error(err));
+		});
+		
 	},
 	getFileInfo(content) {
-		// const finalPeriod = content.search(/\.(?:.(?!\\))+$/gim);
+		// Split the message content at the final instance of a period
 		const finalPeriod = content.lastIndexOf('.');
 		if (finalPeriod < 0) return false;
 		const extension = content.slice(finalPeriod).replace('.','').toLowerCase();
@@ -48,8 +97,8 @@ module.exports = {
 		const extensions = require('./config.json').validExtensions;
 		return extensions.includes(extension);
 	},
-	cleanInput(input) {
-		return input.replace(/'/g, '\\\'').replace(/\n/g, '\\n');
+	cleanInput(string) {
+		return string.replace(/'/g, "''").replace(/\n/g, '\\n');
 	},
 	createGifEmbed(data, author, command) {
 		return new Discord.MessageEmbed()
@@ -183,5 +232,11 @@ module.exports = {
 			.setDescription(list.join('\n'))
 			.setTimestamp()
 			.setFooter(`@${message.author.username}#${message.author.discriminator}`);
+	},
+	uploadGIF(name, embed_url) {
+		const query = `INSERT INTO gifs (name, embed_url) VALUES ('${name}','${embed_url})'`;
+		db.query(query)
+			.then()
+			.catch(e => console.error(e));
 	}
 }
