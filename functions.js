@@ -108,22 +108,24 @@ module.exports = {
 			.setFooter(`@${author.username}#${author.discriminator}`);
 	},
 	saveGif(message, name, embed_url) {
-		fs.writeFile(`./gifs/${name}.js`, `module.exports = {\n\tname: '${name}',\n\tembed_url: '${embed_url}'\n}`, function(err) {
-			if (err) throw err;
-			console.log('Saved file!');
-			const gif = require(`./gifs/${name}.js`);
-			message.client.gifs.set(gif.name, gif);
-		});
+		const gif = {
+			name: name,
+			embed_url: embed_url
+		};
+		message.client.gifs.set(gif.name, gif);
+		this.uploadGIF(name, embed_url);
 	},
 	savePasta(message, name, content) {
-		fs.writeFile(`./pastas/${name}.js`, `module.exports = {\n\tname: '${name}',\n\tcontent: '${content}'\n}`, function(err) {
-			if (err) {
-				return `There was a problem saving the copypasta.`;
-			}
-			const pasta = require(`./pastas/${name}.js`);
-			message.client.pastas.set(pasta.name, pasta);
-		});
-		return `Copypasta saved successfully as ${name}.pasta`;
+		const pasta = {
+			name: name,
+			content: content
+		};
+		message.client.pastas.set(pasta.name, pasta);
+		
+		const query = `INSERT INTO pastas (name, content) VALUES ('${name}','${content}')`;
+		db.query(query);
+		
+		return "Success";
 	},
 	createAirportEmbed(data, author, command) {
 		const airport = data.airport[0];
@@ -234,7 +236,7 @@ module.exports = {
 			.setFooter(`@${message.author.username}#${message.author.discriminator}`);
 	},
 	uploadGIF(name, embed_url) {
-		const query = `INSERT INTO gifs (name, embed_url) VALUES ('${name}','${embed_url})'`;
+		const query = `INSERT INTO gifs (name, embed_url) VALUES ('${name}','${embed_url}')`;
 		db.query(query)
 			.then()
 			.catch(e => console.error(e));
