@@ -20,15 +20,16 @@ module.exports = {
 		}
 	},
 	getCommandFiles(client) {
-		client.commands = new Discord.Collection();
+		if (!client.commands) client.commands = new Discord.Collection();
+		client.commands.clear();
 		for (const file of commandFiles) {
 			const command = require(`./commands/${file}`);
 			client.commands.set(command.name, command);
 		}
 	},
 	getGifFiles(client) {
-		client.gifs = new Discord.Collection();
-
+		if (!client.gifs) client.gifs = new Discord.Collection();
+		client.gifs.clear();
 		const query = "SELECT name, embed_url FROM gifs";
 		return new Promise((resolve, reject) => {
 			db.query(query)
@@ -46,8 +47,8 @@ module.exports = {
 		});
 	},
 	getPotPhrases(client) {
-		client.potphrases = new Discord.Collection();
-
+		if (!client.potphrases) client.potphrases = new Discord.Collection();
+		client.potphrases.clear();
 		const query = "SELECT id, content FROM potphrases";
 		db.query(query)
 			.then(res => {
@@ -62,8 +63,8 @@ module.exports = {
 			.catch(err => console.error(err));
 	},
 	getPastaFiles(client) {
-		client.pastas = new Discord.Collection();
-		
+		if (!client.pastas) client.pastas = new Discord.Collection();
+		client.pastas.clear();
 		const query = "SELECT name, content FROM pastas";
 		return new Promise((resolve, reject) => {
 			db.query(query)
@@ -80,6 +81,12 @@ module.exports = {
 			.catch(err => console.error(err));
 		});
 		
+	},
+	reload(client) {
+		this.getCommandFiles(client);
+		this.getGifFiles(client);
+		this.getPastaFiles(client);
+		this.getPotPhrases(client);
 	},
 	getFileInfo(content) {
 		// Split the message content at the final instance of a period
@@ -237,6 +244,12 @@ module.exports = {
 	},
 	uploadGIF(name, embed_url) {
 		const query = `INSERT INTO gifs (name, embed_url) VALUES ('${name}','${embed_url}')`;
+		db.query(query)
+			.then()
+			.catch(e => console.error(e));
+	},
+	uploadPotPhrase(content) {
+		const query = `INSERT INTO potphrases (content) VALUES ('${content}')`;
 		db.query(query)
 			.then()
 			.catch(e => console.error(e));
