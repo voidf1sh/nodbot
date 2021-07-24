@@ -11,7 +11,7 @@ module.exports = {
 				const pastaCollector = promptMessage.channel.createMessageCollector(pastaFilter, { time: 30000, max: 1 });
 
 				pastaCollector.on('collect', pastaMessage => {
-					message.channel.send(functions.savePasta(message, file.name, functions.cleanInput(pastaMessage.content)));
+					message.channel.send(functions.savePasta(message, file.name.toLowerCase(), functions.cleanInput(pastaMessage.content)));
 				})
 			})
 			.catch(err => console.error(err));
