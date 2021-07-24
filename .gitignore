@@ -1,6 +1,7 @@
 # IDE Config Files
 .vscode
 .eslintrc.json
+package-lock.json
 
 # Custom folders
 # gifs/*
