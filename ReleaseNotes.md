@@ -1,5 +1,8 @@
 # Release Notes
 
+## v2.2.1 Hotfix
+Fix bug where saved content isn't saved as lowercase, making in unaccessible.
+
 ## v2.2.0
 NodBot no longer stores saved GIFs, Copypastas, and other custom content locally. This means no more discrepancies between versions of the bot!
 

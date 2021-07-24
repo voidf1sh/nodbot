@@ -80,7 +80,7 @@ module.exports = {
 
 											nameCollector.on('collect', nameMessage => {
 												channel.send('The GIF has been saved as: ' + nameMessage.content + '.gif');
-												functions.saveGif(message, nameMessage.content, data.embed_url);
+												functions.saveGif(message, nameMessage.content.toLowerCase(), data.embed_url);
 											});
 											nameCollector.on('end', (collected, reason) => {
 												switch (reason) {
