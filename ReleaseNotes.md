@@ -1,5 +1,8 @@
 # Release Notes
 
+## v2.2.0
+NodBot no longer stores saved GIFs, Copypastas, and other custom content locally. This means no more discrepancies between versions of the bot!
+
 ## v2.1.0
 Want to add a phrase to the `.joint` rotation? Try `<phrase>.roll`.
 
