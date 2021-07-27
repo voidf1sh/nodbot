@@ -2,6 +2,7 @@
 .vscode
 .eslintrc.json
 package-lock.json
+.VSCodeCounter/
 
 # Custom folders
 # gifs/*
