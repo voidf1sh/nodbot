@@ -15,7 +15,10 @@ module.exports = {
 		const client = message.client;
 		if (!client.gifs.has(file.name)) {
 			tenor.Search.Query(file.name, 1).then(res => {
-				if (res[0] == undefined) return;
+				if (res[0] == undefined) {
+					message.reply('Sorry I was unable to find a GIF of ' + file.name);
+					return;
+				};
 				const gifInfo = {
 					'name': file.name,
 					'embed_url': res[0].media[0].gif.url
