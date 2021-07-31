@@ -7,7 +7,7 @@ module.exports = {
 	execute(message, file) {
 		const request = file.name;
 		message.channel.send(fn.textEmbed('Your request has been submitted!', message.author, file.extension));
-		message.client.users.fetch(process.env.ownerID).then(user => {user.send('New request or feedback:\n```\n' + request + '\n```');}).catch(error => { console.error(error);} );
+		message.client.users.fetch(process.env.ownerID).then(user => {user.send(fn.textEmbed(request, message.author, file.extension));}).catch(error => { console.error(error);} );
 		fn.uploadRequest(message.author, file.name);
 	}
 }
