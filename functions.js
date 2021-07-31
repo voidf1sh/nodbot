@@ -95,8 +95,8 @@ module.exports = {
 		const extension = content.slice(finalPeriod).replace('.','').toLowerCase();
 		const filename = content.slice(0,finalPeriod).toLowerCase();
 		const file = {
-			'name': filename,
-			'extension': extension
+			name: filename,
+			extension: extension
 		};
 		return file;
 	},
@@ -109,7 +109,7 @@ module.exports = {
 	},
 	createGifEmbed(data, author, command) {
 		return new Discord.MessageEmbed()
-			.setAuthor(command)
+			.setAuthor('Command: ' + command)
 			.setImage(data.embed_url)
 			.setTimestamp()
 			.setFooter(`@${author.username}#${author.discriminator}`);
@@ -137,7 +137,7 @@ module.exports = {
 	createAirportEmbed(data, author, command) {
 		const airport = data.airport[0];
 		return new Discord.MessageEmbed()
-			.setAuthor(command)
+			.setAuthor('Command: ' + command)
 			.setTitle(airport.airport_name)
 			.addFields(
 				{ name: 'Location', value: `${airport.city}, ${airport.state_abbrev}`, inline: true },
@@ -152,7 +152,7 @@ module.exports = {
 		const loc = data.location;
 		const weather = data.current;
 		return new Discord.MessageEmbed()
-			.setAuthor(command)
+			.setAuthor('Command: ' + command)
 			.setTitle(`${loc.name}, ${loc.region}, ${loc.country} Weather`)
 			.setDescription(`The weather is currently ${weather.condition.text}`)
 			.addFields(
@@ -165,16 +165,16 @@ module.exports = {
 			.setTimestamp()
 			.setFooter(`@${author.username}#${author.discriminator}`);
 	},
-	createTextEmbed(data, author, command) {
+	textEmbed(content, author, command) {
 		return new Discord.MessageEmbed()
-			.setAuthor(command)
-			.setDescription(data.content)
+			.setAuthor('Command: ' + command)
+			.setDescription(content)
 			.setTimestamp()
 			.setFooter(`@${author.username}#${author.discriminator}`);
 	},
 	createStockEmbed(data, author, command) {
 		return new Discord.MessageEmbed()
-			.setAuthor(command)
+			.setAuthor('Command: ' + command)
 			.setTitle()
 			.setTimestamp()
 			.setFooter(`@${author.username}#${author.discriminator}`);
@@ -253,5 +253,43 @@ module.exports = {
 		db.query(query)
 			.then()
 			.catch(e => console.error(e));
+	},
+	uploadRequest(author, request) {
+		const query = `INSERT INTO requests (author, request, status) VALUES ('@${author.username}#${author.discriminator}','${request}','Active')`;
+		db.query(query)
+			.then()
+			.catch(e => console.error(e));
+	},
+	getActiveRequests(message) {
+		const query = "SELECT * FROM requests WHERE status = 'Active'";
+		let rows;
+		db.query(query)
+		.then(res => {
+			const embed = this.requestsEmbed(res.rows);
+			message.channel.send(embed);
+		})
+		.catch(e => console.error(e));
+		return rows;
+	},
+	requestsEmbed(rows) {
+		let fields = [];
+		for (const row of rows) {
+			fields.push({
+				name: '#' + row.id,
+				value: row.request + `\nSubmitted by ${row.author}`
+			});
+		}
+		
+		return new Discord.MessageEmbed()
+			.setAuthor('NodBot Requests')
+			.setTitle('Currently Active Requests')
+			.addFields(fields)
+			.setTimestamp();
+	},
+	closeRequest(id) {
+		const query = `UPDATE requests SET status = 'Closed' WHERE id = ${id}`;
+		db.query(query)
+		.then()
+		.catch(e => console.error(e));
 	}
 }
