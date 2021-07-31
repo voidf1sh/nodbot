@@ -13,6 +13,6 @@ module.exports = {
 		} else {
 			replyBody = client.pastas.get(file.name).content;
 		}
-		message.channel.send(functions.createTextEmbed({ content: replyBody }, message.author, `${file.name}.${file.extension}`));
+		message.channel.send(functions.textEmbed(replyBody, message.author, `${file.name}.${file.extension}`));
 	}
 }
