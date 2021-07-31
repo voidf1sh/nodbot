@@ -65,14 +65,15 @@ module.exports = {
 	getPastaFiles(client) {
 		if (!client.pastas) client.pastas = new Discord.Collection();
 		client.pastas.clear();
-		const query = "SELECT name, content FROM pastas";
+		const query = "SELECT name, content, iconurl FROM pastas";
 		return new Promise((resolve, reject) => {
 			db.query(query)
 			.then(res => {
 				for (let row of res.rows) {
 					const pasta = {
 						name: row.name,
-						content: row.content
+						content: row.content,
+						iconUrl: row.iconurl
 					};
 					client.pastas.set(pasta.name, pasta);
 				}
@@ -169,6 +170,14 @@ module.exports = {
 		return new Discord.MessageEmbed()
 			.setAuthor('Command: ' + command)
 			.setDescription(content)
+			.setTimestamp()
+			.setFooter(`@${author.username}#${author.discriminator}`);
+	},
+	pastaEmbed(content, iconUrl, author) {
+		return new Discord.MessageEmbed()
+			.setAuthor('Command: ' + 'pasta')
+			.setDescription(content)
+			.setThumbnail(iconUrl)
 			.setTimestamp()
 			.setFooter(`@${author.username}#${author.discriminator}`);
 	},
