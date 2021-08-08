@@ -39,14 +39,16 @@ client.login(process.env.TOKEN)
 
 // This runs on each message the bot sees
 client.on('message', message => {
+	// Out here smoking big doinks in Amish
+	if (message.content.toLowerCase().includes('big doinks')) {
+		message.channel.send('gang.');
+	}
+	
 	// Get the filename and extension as an array
 	const file = functions.getFileInfo(message.content);
 	if (!file) return;
 	
-	// Out here smoking big doinks in Amish
-	if (message.content.toLocaleLowerCase.includes('big doinks')) {
-		message.channel.send('gang.');
-	}
+	
 	
 	// If the message is from a bot, or doesn't have a valid file extension, stop here.
 	if (functions.extIsValid(file.extension) == false || message.author.bot) return;
