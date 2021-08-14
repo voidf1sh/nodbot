@@ -40,7 +40,7 @@ client.login(process.env.TOKEN)
 // This runs on each message the bot sees
 client.on('message', message => {
 	// Out here smoking big doinks in Amish
-	if (message.content.toLowerCase().includes('big doinks')) {
+	if ((message.content.toLowerCase().includes('big')) && message.content.toLowerCase().includes('doinks')) {
 		message.channel.send('gang.');
 	}
 	
