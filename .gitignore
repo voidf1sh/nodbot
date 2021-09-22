@@ -1,6 +1,5 @@
 # IDE Config Files
 .vscode
-.eslintrc.json
 package-lock.json
 .VSCodeCounter/
 
