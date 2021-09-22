@@ -138,7 +138,7 @@ const functions = {
 				return commandData;
 			}
 			commandData.isCommand = true;
-			commandData.args = message.content.slice(0,finalPeriod);
+			commandData.args = message.content.slice(0,finalPeriod).toLowerCase();
 			commandData.command = message.content.slice(finalPeriod).replace('.','').toLowerCase();
 			commandData.author = `${message.author.username}#${message.author.discriminator}`;
 			return this.checkCommand(commandData);

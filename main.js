@@ -184,8 +184,9 @@ client.on('messageCreate', message => {
 	if (message.author.bot) return;
 
 	// Wildcard Responses, will respond if any message contains the trigger word(s), excluding self-messages
-	if (message.content.includes('big') && message.content.includes('doinks')) message.reply('gang.');
-	if (message.content.includes('ligma')) message.reply('ligma balls, goteem');
+	const lowerContent = message.content.toLowerCase();
+	if (lowerContent.includes('big') && lowerContent.includes('doinks')) message.reply('gang.');
+	if (lowerContent.includes('ligma')) message.reply('ligma balls, goteem');
 
 	const commandData = fn.dot.getCommandData(message);
 	console.log(commandData);
