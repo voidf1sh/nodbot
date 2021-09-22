@@ -1,304 +1,439 @@
-const Discord = require('discord.js');
-const fs = require('fs');
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-const config = require('./config.json');
-const pg = require('pg');
-let dbConnected = false;
-const db = new pg.Client({
-	connectionString: process.env.DATABASE_URL,
-	ssl: {
-		rejectUnauthorized: false
-	}
-});
+/* eslint-disable comma-dangle */
+// dotenv for handling environment variables
+const dotenv = require('dotenv');
+dotenv.config();
+// Assignment of environment variables
+const dbHost = process.env.dbHost;
+const dbUser = process.env.dbUser;
+const dbName = process.env.dbName;
+const dbPass = process.env.dbPass;
+const dbPort = process.env.dbPort;
 
+// filesystem
+const fs = require('fs');
+
+// D.js
+const Discord = require('discord.js');
+
+// Fuzzy text matching for db lookups
+const FuzzySearch = require('fuzzy-search');
+
+// Various imports
+const config = require('./config.json');
+const strings = require('./strings.json');
+const slashCommandFiles = fs.readdirSync('./slash-commands/').filter(file => file.endsWith('.js'));
+const dotCommandFiles = fs.readdirSync('./dot-commands/').filter(file => file.endsWith('.js'));
+
+// MySQL
+const mysql = require('mysql');
+const db = new mysql.createConnection({
+	host: dbHost,
+	user: dbUser,
+	password: dbPass,
+	database: dbName,
+	port: dbPort,
+});
 db.connect();
 
-module.exports = {
-	setValidExtensions(client) {
-		for (const entry of client.commands.map(command => command.name)) {
-			config.validExtensions.push(entry);
-		}
-	},
-	getCommandFiles(client) {
-		if (!client.commands) client.commands = new Discord.Collection();
-		client.commands.clear();
-		for (const file of commandFiles) {
-			const command = require(`./commands/${file}`);
-			client.commands.set(command.name, command);
-		}
-	},
-	getGifFiles(client) {
-		if (!client.gifs) client.gifs = new Discord.Collection();
-		client.gifs.clear();
-		const query = "SELECT name, embed_url FROM gifs";
-		return new Promise((resolve, reject) => {
-			db.query(query)
-				.then(res => {
-					for (let row of res.rows) {
-						const gif = {
-							name: row.name,
-							embed_url: row.embed_url
-						};
-						client.gifs.set(gif.name, gif);
-					}
-					resolve();
-				})
-				.catch(err => console.error(err));
-		});
-	},
-	getPotPhrases(client) {
-		if (!client.potphrases) client.potphrases = new Discord.Collection();
-		client.potphrases.clear();
-		const query = "SELECT id, content FROM potphrases";
-		db.query(query)
-			.then(res => {
-				for (let row of res.rows) {
-					const potphrase = {
-						id: row.id,
-						content: row.content
-					};
-					client.potphrases.set(potphrase.id, potphrase);
+const functions = {
+	collections: {
+		slashCommands(client) {
+			if (!client.slashCommands) client.slashCommands = new Discord.Collection();
+			client.slashCommands.clear();
+			for (const file of slashCommandFiles) {
+				const slashCommand = require(`./slash-commands/${file}`);
+				if (slashCommand.data != undefined) {
+					client.slashCommands.set(slashCommand.data.name, slashCommand);
 				}
-			})
-			.catch(err => console.error(err));
-	},
-	getPastaFiles(client) {
-		if (!client.pastas) client.pastas = new Discord.Collection();
-		client.pastas.clear();
-		const query = "SELECT name, content, iconurl FROM pastas";
-		return new Promise((resolve, reject) => {
-			db.query(query)
-			.then(res => {
-				for (let row of res.rows) {
-					const pasta = {
-						name: row.name,
-						content: row.content,
-						iconUrl: row.iconurl
-					};
-					client.pastas.set(pasta.name, pasta);
-				}
-				resolve();
-			})
-			.catch(err => console.error(err));
-		});
-		
-	},
-	reload(client) {
-		this.getCommandFiles(client);
-		this.getGifFiles(client);
-		this.getPastaFiles(client);
-		this.getPotPhrases(client);
-	},
-	getFileInfo(content) {
-		// Split the message content at the final instance of a period
-		const finalPeriod = content.lastIndexOf('.');
-		if (finalPeriod < 0) return false;
-		const extension = content.slice(finalPeriod).replace('.','').toLowerCase();
-		const filename = content.slice(0,finalPeriod).toLowerCase();
-		const file = {
-			name: filename,
-			extension: extension
-		};
-		return file;
-	},
-	extIsValid(extension) {
-		const extensions = require('./config.json').validExtensions;
-		return extensions.includes(extension);
-	},
-	cleanInput(string) {
-		return string.replace(/'/g, "''").replace(/\n/g, '\\n');
-	},
-	createGifEmbed(data, author, command) {
-		return new Discord.MessageEmbed()
-			.setAuthor('Command: ' + command)
-			.setImage(data.embed_url)
-			.setTimestamp()
-			.setFooter(`@${author.username}#${author.discriminator}`);
-	},
-	saveGif(message, name, embed_url) {
-		const gif = {
-			name: name,
-			embed_url: embed_url
-		};
-		message.client.gifs.set(gif.name, gif);
-		this.uploadGIF(name, embed_url);
-	},
-	savePasta(message, name, content) {
-		const pasta = {
-			name: name,
-			content: content
-		};
-		message.client.pastas.set(pasta.name, pasta);
-		
-		const query = `INSERT INTO pastas (name, content) VALUES ('${name}','${content}')`;
-		db.query(query);
-		
-		return "Success";
-	},
-	createAirportEmbed(data, author, command) {
-		const airport = data.airport[0];
-		return new Discord.MessageEmbed()
-			.setAuthor('Command: ' + command)
-			.setTitle(airport.airport_name)
-			.addFields(
-				{ name: 'Location', value: `${airport.city}, ${airport.state_abbrev}`, inline: true },
-				{ name: 'Coordinates', value: `${airport.latitude}, ${airport.longitude}`, inline: true },
-				{ name: 'Elevation', value: `${airport.elevation}ft`, inline: true },
-				{ name: 'More Information', value: airport.link_path }
-			)
-			.setTimestamp()
-			.setFooter(`@${author.username}#${author.discriminator}`);
-	},
-	createWeatherEmbed(data, author, command) {
-		const loc = data.location;
-		const weather = data.current;
-		return new Discord.MessageEmbed()
-			.setAuthor('Command: ' + command)
-			.setTitle(`${loc.name}, ${loc.region}, ${loc.country} Weather`)
-			.setDescription(`The weather is currently ${weather.condition.text}`)
-			.addFields(
-				{ name: 'Temperature', value: `${weather.temp_f}°F (Feels like: ${weather.feelslike_f}°F)`, inline: true },
-				{ name: 'Winds', value: `${weather.wind_mph} ${weather.wind_dir}`, inline: true },
-				{ name: 'Pressure', value: `${weather.pressure_in}inHg`, inline: true },
-				{ name: 'Relative Humidity', value: `${weather.humidity}%`, inline: true }
-			)
-			.setThumbnail(`https:${weather.condition.icon}`)
-			.setTimestamp()
-			.setFooter(`@${author.username}#${author.discriminator}`);
-	},
-	textEmbed(content, author, command) {
-		return new Discord.MessageEmbed()
-			.setAuthor('Command: ' + command)
-			.setDescription(content)
-			.setTimestamp()
-			.setFooter(`@${author.username}#${author.discriminator}`);
-	},
-	pastaEmbed(content, iconUrl, author) {
-		return new Discord.MessageEmbed()
-			.setAuthor('Command: ' + 'pasta')
-			.setDescription(content)
-			.setThumbnail(iconUrl)
-			.setTimestamp()
-			.setFooter(`@${author.username}#${author.discriminator}`);
-	},
-	createStockEmbed(data, author, command) {
-		return new Discord.MessageEmbed()
-			.setAuthor('Command: ' + command)
-			.setTitle()
-			.setTimestamp()
-			.setFooter(`@${author.username}#${author.discriminator}`);
-	},
-	createHelpEmbed(message) {
-		const { commands } = message.client;
-		let fields = [];
-		for (const entry of commands.map(command => [command.name, command.description, command.usage])) {
-			const name = entry[0];
-			const description = entry[1];
-			let usage;
-			if (entry[2] == undefined) {
-				usage = '';
-			} else {
-				usage = entry[2];
 			}
-			const excludeList = [
-				'kill',
-				'mapcommands',
-				'newgif',
-				'newpng',
-				'oldgif',
-				'strain',
-				'stonk',
-				'wrongbad'
-			];
-			if (excludeList.includes(name)) continue;
-			fields.push({
-				name: name,
-				value: `${description}\n**Usage:** \`${usage}.${name}\``
+			if (config.isDev) console.log('Slash Commands Collection Built');
+		},
+		setvalidCommands(client) {
+			for (const entry of client.dotCommands.map(command => command.name)) {
+				config.validCommands.push(entry);
+			}
+			if (config.isDev) console.log('Valid Commands Added to Config');
+		},
+		dotCommands(client) {
+			if (!client.dotCommands) client.dotCommands = new Discord.Collection();
+			client.dotCommands.clear();
+			for (const file of dotCommandFiles) {
+				const dotCommand = require(`./dot-commands/${file}`);
+				client.dotCommands.set(dotCommand.name, dotCommand);
+			}
+			if (config.isDev) console.log('Dot Commands Collection Built');
+		},
+		gifs(rows, client) {
+			if (!client.gifs) client.gifs = new Discord.Collection();
+			client.gifs.clear();
+			for (const row of rows) {
+				const gif = {
+					id: row.id,
+					name: row.name,
+					embed_url: row.embed_url
+				};
+				client.gifs.set(gif.name, gif);
+			}
+			if (config.isDev) console.log('GIFs Collection Built');
+		},
+		joints(rows, client) {
+			if (!client.joints) client.joints = new Discord.Collection();
+			client.joints.clear();
+			for (const row of rows) {
+				const joint = {
+					id: row.id,
+					content: row.content
+				};
+				client.joints.set(joint.id, joint);
+			}
+			if (config.isDev) console.log('Joints Collection Built');
+		},
+		pastas(rows, client) {
+			if (!client.pastas) client.pastas = new Discord.Collection();
+			client.pastas.clear();
+			for (const row of rows) {
+				const pasta = {
+					id: row.id,
+					name: row.name,
+					content: row.content,
+					iconUrl: row.iconurl,
+				};
+				client.pastas.set(pasta.name, pasta);
+			}
+			if (config.isDev) console.log('Pastas Collection Built');
+		},
+		requests(rows, client) {
+			if (!client.requests) client.requests = new Discord.Collection();
+			client.requests.clear();
+			for (const row of rows) {
+				const request = {
+					id: row.id,
+					author: row.author,
+					request: row.request,
+				};
+				client.requests.set(request.id, request);
+			}
+			if (config.isDev) console.log('Requests Collection Built');
+		},
+		strains(rows, client) {
+			if (!client.strains) client.strains = new Discord.Collection();
+			client.strains.clear();
+			for (const row of rows) {
+				const strain = {
+					id: row.id,
+					name: row.name,
+				};
+				client.strains.set(strain.name, strain);
+			}
+			if (config.isDev) console.log('Strains Collection Built');
+		}
+	},
+	dot: {
+		getCommandData(message) {
+			const commandData = {};
+			// Split the message content at the final instance of a period
+			const finalPeriod = message.content.lastIndexOf('.');
+			if (finalPeriod < 0) {
+				commandData.isCommand = false;
+				return commandData;
+			}
+			commandData.isCommand = true;
+			commandData.args = message.content.slice(0,finalPeriod);
+			commandData.command = message.content.slice(finalPeriod).replace('.','').toLowerCase();
+			commandData.author = `${message.author.username}#${message.author.discriminator}`;
+			return this.checkCommand(commandData);
+		},
+		checkCommand(commandData) {
+			if (commandData.isCommand) {
+				const validCommands = require('./config.json').validCommands;
+				commandData.isValid = validCommands.includes(commandData.command);
+			}
+			else {
+				commandData.isValid = false;
+				console.error('Somehow a non-command made it to checkCommands()');
+			}
+			return commandData;
+		}
+	},
+	embeds: {
+		help(interaction) {
+			// Construct the Help Embed
+			const helpEmbed = new Discord.MessageEmbed()
+				.setColor('BLUE')
+				.setAuthor('Help Page')
+				.setDescription(strings.help.description)
+				.setThumbnail(strings.urls.avatar);
+
+			// Construct the Slash Commands help
+
+			let slashCommandsFields = [];
+
+			const slashCommandsMap = interaction.client.slashCommands.map(e => {
+				return {
+					name: e.data.name,
+					description: e.data.description
+				};
+			})
+
+			for (const e of slashCommandsMap) {
+				slashCommandsFields.push({
+					name: `- /${e.name}`,
+					value: e.description,
+					inline: false,
+				});
+			}
+
+			// Construct the Dot Commands Help
+			let dotCommandsFields = [];
+
+			const dotCommandsMap = interaction.client.dotCommands.map(e => {
+				return {
+					name: e.name,
+					description: e.description,
+					usage: e.usage
+				};
+			});
+
+			for (const e of dotCommandsMap) {
+				dotCommandsFields.push({
+					name: `- .${e.name}`,
+					value: `${e.description}\nUsage: ${e.usage}`,
+					inline: false,
+				});
+			}
+
+			helpEmbed.addField('Slash Commands', strings.help.slash);
+			helpEmbed.addFields(slashCommandsFields);
+			helpEmbed.addField('Dot Commands', strings.help.dot);
+			helpEmbed.addFields(dotCommandsFields);
+
+			return { embeds: [
+				helpEmbed
+			]};
+		},
+		gif(commandData) {
+			return { embeds: [new Discord.MessageEmbed()
+				.setAuthor(`${commandData.args}.${commandData.command}`)
+				.setImage(commandData.embed_url)
+				.setTimestamp()
+				.setFooter(commandData.author)]};
+		},
+		pasta(commandData) {
+			return { embeds: [ new Discord.MessageEmbed()
+				.setAuthor(`${commandData.args}.${commandData.command}`)
+				.setDescription(commandData.content)
+				.setThumbnail(commandData.iconUrl)
+				.setTimestamp()
+				.setFooter(commandData.author)]};
+		},
+		pastas(commandData) {
+			const pastasArray = [];
+			const pastasEmbed = new Discord.MessageEmbed()
+				.setAuthor(commandData.command)
+				.setTimestamp()
+				.setFooter(commandData.author);
+
+			for (const row of commandData.pastas) {
+				pastasArray.push(`#${row.id} - ${row.name}.pasta`);
+			}
+
+			const pastasString = pastasArray.join('\n');
+			pastasEmbed.setDescription(pastasString);
+
+			return { embeds: [pastasEmbed] };
+		},
+		gifs(commandData) {
+			const gifsArray = [];
+			const gifsEmbed = new Discord.MessageEmbed()
+				.setAuthor(commandData.command)
+				.setTimestamp()
+				.setFooter(commandData.author);
+
+			for (const row of commandData.gifs) {
+				gifsArray.push(`#${row.id} - ${row.name}.gif`);
+			}
+
+			const gifsString = gifsArray.join('\n');
+			gifsEmbed.setDescription(gifsString);
+
+			return { embeds: [gifsEmbed] };
+		},
+		text(commandData) {
+			return { embeds: [new Discord.MessageEmbed()
+				.setAuthor(commandData.command)
+				.setDescription(commandData.content)
+				.setTimestamp()
+				.setFooter(commandData.author)]};
+		},
+		requests(commandData) {
+			const requestsEmbed = new Discord.MessageEmbed()
+				.setAuthor(commandData.command)
+				.setTimestamp()
+				.setFooter(commandData.author);
+
+			const requestsArray = [];
+
+			for (const row of commandData.requests) {
+				requestsArray.push(
+					`**#${row.id} - ${row.author}**`,
+					`Request: ${row.request}`
+				);
+			}
+
+			requestsEmbed.setDescription(requestsArray.join('\n'));
+
+			return { embeds: [requestsEmbed]};
+		},
+		strain(commandData, message) {
+			const strainEmbed = new Discord.MessageEmbed()
+				.setAuthor(`${commandData.command} #${commandData.strainInfo.id}`)
+				.setTimestamp()
+				.setFooter(commandData.author);
+			const { strainInfo } = commandData;
+			strainEmbed.addFields([
+				{
+					name: 'Strain Name',
+					value: `${strainInfo.name}`,
+				},
+				{
+					name: 'Type',
+					value: `${strainInfo.type}`,
+					inline: true,
+				},
+				{
+					name: 'Effects',
+					value: `${strainInfo.effects}`,
+					inline: true,
+				},
+				{
+					name: 'Treats',
+					value: `${strainInfo.ailments}`,
+					inline: true,
+				},
+				{
+					name: 'Flavor',
+					value: `${strainInfo.flavor}`,
+					inline: true,
+				},
+			]);
+
+			message.reply({ embeds: [ strainEmbed ]});
+		},
+	},
+	collect: {
+		gifName(interaction) {
+			const gifNameFilter = m => m.author.id == strings.temp.gifUserId;
+			return interaction.channel.createMessageCollector({ filter: gifNameFilter, time: 30000 });
+		},
+	},
+	upload: {
+		request(commandData, client) {
+			const query = `INSERT INTO requests (author, request, status) VALUES ('${commandData.author}','${commandData.args}','Active')`;
+			db.query(query, (err, rows, fields) => {
+				if (err) throw err;
+				functions.download.requests(client);
+			});
+		},
+		pasta(pastaData, client) {
+			const query = `INSERT INTO pastas (name, content) VALUES ('${pastaData.name}','${pastaData.content}')`;
+			db.query(query, (err, rows, fields) => {
+				if (err) throw err;
+				functions.download.pastas(client);
+			});
+		},
+		joint(content, client) {
+			const query = `INSERT INTO joints (content) VALUES ('${content}')`;
+			db.query(query, (err, rows, fields) => {
+				if (err) throw err;
+				functions.download.joints(client);
+			});
+		},
+		gif(gifData, client) {
+			const query = `INSERT INTO gifs (name, embed_url) VALUES ('${gifData.name}', '${gifData.embed_url}')`;
+			db.query(query, (err, rows, fields) => {
+				if (err) throw err;
+				functions.download.gifs(client);
 			});
 		}
-		
-		return new Discord.MessageEmbed()
-			.setAuthor('NodBot Help')
-			.setDescription('All commands are provided as "file extensions" instead of prefixes to the message.')
-			.addFields(fields)
-			.setTimestamp();
 	},
-	createGIFList(message) {
-		let list = [];
-		const { gifs } = message.client;
-		for (const entry of gifs.map(gif => [gif.name])) {
-			list.push(entry[0] + '.gif');
-		}
-
-		return new Discord.MessageEmbed()
-			.setAuthor('NodBot GIF List')
-			.setTitle('List of Currently Saved GIFs')
-			.setDescription(list.join('\n'))
-			.setTimestamp()
-			.setFooter(`@${message.author.username}#${message.author.discriminator}`);
-	},
-	createPastaList(message) {
-		let list = [];
-		const { pastas } = message.client;
-		for (const entry of pastas.map(pasta => [pasta.name])) {
-			list.push(entry[0] + '.pasta');
-		}
-
-		return new Discord.MessageEmbed()
-			.setAuthor('NodBot Pasta List')
-			.setTitle('List of Currently Saved Copypastas')
-			.setDescription(list.join('\n'))
-			.setTimestamp()
-			.setFooter(`@${message.author.username}#${message.author.discriminator}`);
-	},
-	uploadGIF(name, embed_url) {
-		const query = `INSERT INTO gifs (name, embed_url) VALUES ('${name}','${embed_url}')`;
-		db.query(query)
-			.then()
-			.catch(e => console.error(e));
-	},
-	uploadPotPhrase(content) {
-		const query = `INSERT INTO potphrases (content) VALUES ('${content}')`;
-		db.query(query)
-			.then()
-			.catch(e => console.error(e));
-	},
-	uploadRequest(author, request) {
-		const query = `INSERT INTO requests (author, request, status) VALUES ('@${author.username}#${author.discriminator}','${request}','Active')`;
-		db.query(query)
-			.then()
-			.catch(e => console.error(e));
-	},
-	getActiveRequests(message) {
-		const query = "SELECT * FROM requests WHERE status = 'Active'";
-		let rows;
-		db.query(query)
-		.then(res => {
-			const embed = this.requestsEmbed(res.rows);
-			message.channel.send(embed);
-		})
-		.catch(e => console.error(e));
-		return rows;
-	},
-	requestsEmbed(rows) {
-		let fields = [];
-		for (const row of rows) {
-			fields.push({
-				name: '#' + row.id,
-				value: row.request + `\nSubmitted by ${row.author}`
+	download: {
+		requests(client) {
+			const query = 'SELECT * FROM requests WHERE status = \'Active\' ORDER BY id ASC';
+			db.query(query, (err, rows, fields) => {
+				if (err) throw err;
+				functions.collections.requests(rows, client);
 			});
-		}
-		
-		return new Discord.MessageEmbed()
-			.setAuthor('NodBot Requests')
-			.setTitle('Currently Active Requests')
-			.addFields(fields)
-			.setTimestamp();
+		},
+		pastas(client) {
+			const query = 'SELECT * FROM pastas ORDER BY id ASC';
+			db.query(query, (err, rows, fields) => {
+				if (err) throw err;
+				functions.collections.pastas(rows, client);
+			});
+		},
+		gifs(client) {
+			const query = 'SELECT * FROM gifs ORDER BY id ASC';
+			db.query(query, (err, rows, fields) => {
+				if (err) throw err;
+				functions.collections.gifs(rows, client);
+			});
+		},
+		joints(client) {
+			const query = 'SELECT * FROM joints ORDER BY id ASC';
+			db.query(query, (err, rows, fields) => {
+				if (err) throw err;
+				functions.collections.joints(rows, client);
+			});
+		},
+		strain(commandData, message) {
+			const { strainName } = commandData;
+			const query = `SELECT id, name, type, effects, ailment, flavor FROM strains WHERE name = '${strainName}'`;
+			db.query(query, (err, rows, fields) => {
+				if (rows != undefined) {
+					commandData.strainInfo = {
+						id: `${rows[0].id}`,
+						name: `${rows[0].name}`,
+						type: `${rows[0].type}`,
+						effects: `${rows[0].effects}`,
+						ailments: `${rows[0].ailment}`,
+						flavor: `${rows[0].flavor}`,
+					};
+					functions.embeds.strain(commandData, message);
+				}
+			});
+		},
+		strains(client) {
+			const query = 'SELECT id, name FROM strains';
+			db.query(query, (err, rows, fields) => {
+				if (err) throw err;
+				functions.collections.strains(rows, client);
+			});
+		},
 	},
-	closeRequest(id) {
-		const query = `UPDATE requests SET status = 'Closed' WHERE id = ${id}`;
-		db.query(query)
-		.then()
-		.catch(e => console.error(e));
-	}
-}
+	weed: {
+		strain: {
+			lookup(strainName, client) {
+				const strainSearcher = new FuzzySearch(client.strains.map(e => e.name));
+				const name = strainSearcher.search(strainName)[0];
+				if (name != undefined) {
+					return name;
+				} else {
+					return false;
+				}
+			},
+			submit(strainName) {
+				return strainName;
+			}
+		}
+	},
+	// Parent-Level functions (miscellaneuous)
+	closeRequest(requestId, client) {
+		const query = `UPDATE requests SET status = 'Closed' WHERE id = ${requestId}`;
+		db.query(query, (err, rows, fields) => {
+			if (err) throw err;
+			functions.download.requests(client);
+		});
+	},
+};
+
+module.exports = functions;

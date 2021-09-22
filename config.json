@@ -1,3 +1,8 @@
 {
-	"validExtensions": []
+	"isDev": true,
+	"clientId": "513184762073055252",
+	"guildId": "760701839427108874",
+	"devChannelId": "868545469381480498",
+	"guildName": "CumbHub",
+	"validCommands": []
 }
