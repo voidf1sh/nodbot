@@ -434,6 +434,33 @@ const functions = {
 			functions.download.requests(client);
 		});
 	},
+	spongebob(commandData) {
+		let flipper = 0;
+		let newText = '';
+		for (const letter of commandData.args) {
+			if (letter == ' ') {
+				newText = newText + letter;
+				continue;
+			}
+			if (letter == 'i' || letter == 'I') {
+				newText = newText + 'i';
+				continue;
+			}
+			if (letter == 'l' || letter == 'L') {
+				newText = newText + 'L';
+				continue;
+			}
+			if (flipper == 0) {
+				newText = newText + letter.toUpperCase();
+				flipper = 1;
+			} else {
+				newText = newText + letter;
+				flipper = 0;
+			}
+		}
+
+		return newText;
+	},
 };
 
 module.exports = functions;
