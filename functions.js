@@ -135,6 +135,9 @@ const functions = {
 			const finalPeriod = message.content.lastIndexOf('.');
 			if (finalPeriod < 0) {
 				commandData.isCommand = false;
+				commandData.args = message.content.slice(0,finalPeriod).toLowerCase();
+				commandData.command = message.content.slice(finalPeriod).replace('.','').toLowerCase();
+				commandData.author = `${message.author.username}#${message.author.discriminator}`;
 				return commandData;
 			}
 			commandData.isCommand = true;
