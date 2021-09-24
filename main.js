@@ -191,10 +191,6 @@ client.on('messageCreate', message => {
 	const commandData = fn.dot.getCommandData(message);
 	console.log(commandData);
 
-	if (message.author.id == '179971329167065088') {
-		message.channel.send(fn.spongebob(commandData));
-	}
-
 	if (commandData.isValid && commandData.isCommand) {
 		try {
 			client.dotCommands.get(commandData.command).execute(message, commandData);
