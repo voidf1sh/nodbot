@@ -26,6 +26,7 @@ const { MessageActionRow, MessageButton } = require('discord.js');
 const fn = require('./functions.js');
 const config = require('./config.json');
 const strings = require('./strings.json');
+config.isDev = process.env.isDev;
 
 client.once('ready', () => {
 	fn.collections.slashCommands(client);
