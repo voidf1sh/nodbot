@@ -1,0 +1,25 @@
+name: NodBot Production Deploy
+
+on: 
+  push: # tells github to run this on any push to the dev branch
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' # we tell Github to only execute this step if we're on our main branch
+    steps:
+      - name: Deploying to Probey
+        uses: appleboy/ssh-action@master # An action made to control Linux servers
+        with: # We set all our secrets here for the action, these won't be shown in the action logs
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd nodbot # we move into our app's folder
+            git pull # we pull any changes from git
+            npm prune # we remove any unused dependencies
+            npm install # we install any missing dependencies
+            pm2 reload nodbot # we reload the app via PM2
