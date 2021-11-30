@@ -34,7 +34,6 @@ const db = new mysql.createPool({
 	database: dbName,
 	port: dbPort,
 });
-db.connect();
 
 const functions = {
 	collections: {
