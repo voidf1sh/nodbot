@@ -26,13 +26,15 @@ const dotCommandFiles = fs.readdirSync('./dot-commands/').filter(file => file.en
 
 // MySQL
 const mysql = require('mysql');
-const db = new mysql.createConnection({
+const db = new mysql.createPool({
+	connectionLimit: 10,
 	host: dbHost,
 	user: dbUser,
 	password: dbPass,
 	database: dbName,
 	port: dbPort,
 });
+db.connect();
 
 const functions = {
 	collections: {
@@ -331,82 +333,65 @@ const functions = {
 	upload: {
 		request(commandData, client) {
 			const query = `INSERT INTO requests (author, request, status) VALUES ('${commandData.author}','${commandData.args}','Active')`;
-			db.connect();
 			db.query(query, (err, rows, fields) => {
 				if (err) throw err;
 				functions.download.requests(client);
 			});
-			db.end();
 		},
 		pasta(pastaData, client) {
 			const query = `INSERT INTO pastas (name, content) VALUES ('${pastaData.name}','${pastaData.content}')`;
-			db.connect();
 			db.query(query, (err, rows, fields) => {
 				if (err) throw err;
 				functions.download.pastas(client);
 			});
-			db.end();
 		},
 		joint(content, client) {
 			const query = `INSERT INTO joints (content) VALUES ('${content}')`;
-			db.connect();
 			db.query(query, (err, rows, fields) => {
 				if (err) throw err;
 				functions.download.joints(client);
 			});
-			db.end();
 		},
 		gif(gifData, client) {
 			const query = `INSERT INTO gifs (name, embed_url) VALUES ('${gifData.name}', '${gifData.embed_url}')`;
-			db.connect();
 			db.query(query, (err, rows, fields) => {
 				if (err) throw err;
 				functions.download.gifs(client);
 			});
-			db.end();
 		}
 	},
 	download: {
 		requests(client) {
 			const query = 'SELECT * FROM requests WHERE status = \'Active\' ORDER BY id ASC';
-			db.connect();
 			db.query(query, (err, rows, fields) => {
 				if (err) throw err;
 				functions.collections.requests(rows, client);
 			});
-			db.end();
 		},
 		pastas(client) {
 			const query = 'SELECT * FROM pastas ORDER BY id ASC';
-			db.connect();
 			db.query(query, (err, rows, fields) => {
 				if (err) throw err;
 				functions.collections.pastas(rows, client);
 			});
-			db.end();
 		},
 		gifs(client) {
 			const query = 'SELECT * FROM gifs ORDER BY id ASC';
-			db.connect();
 			db.query(query, (err, rows, fields) => {
 				if (err) throw err;
 				functions.collections.gifs(rows, client);
 			});
-			db.end();
 		},
 		joints(client) {
 			const query = 'SELECT * FROM joints ORDER BY id ASC';
-			db.connect();
 			db.query(query, (err, rows, fields) => {
 				if (err) throw err;
 				functions.collections.joints(rows, client);
 			});
-			db.end();
 		},
 		strain(commandData, message) {
 			const { strainName } = commandData;
 			const query = `SELECT id, name, type, effects, ailment, flavor FROM strains WHERE name = '${strainName}'`;
-			db.connect();
 			db.query(query, (err, rows, fields) => {
 				if (rows != undefined) {
 					commandData.strainInfo = {
@@ -420,16 +405,13 @@ const functions = {
 					functions.embeds.strain(commandData, message);
 				}
 			});
-			db.end();
 		},
 		strains(client) {
 			const query = 'SELECT id, name FROM strains';
-			db.connect();
 			db.query(query, (err, rows, fields) => {
 				if (err) throw err;
 				functions.collections.strains(rows, client);
 			});
-			db.end();
 		},
 	},
 	weed: {
@@ -451,12 +433,10 @@ const functions = {
 	// Parent-Level functions (miscellaneuous)
 	closeRequest(requestId, client) {
 		const query = `UPDATE requests SET status = 'Closed' WHERE id = ${requestId}`;
-		db.connect();
 		db.query(query, (err, rows, fields) => {
 			if (err) throw err;
 			functions.download.requests(client);
 		});
-		db.end();
 	},
 	spongebob(commandData) {
 		let flipper = 0;
