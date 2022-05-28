@@ -2,29 +2,30 @@
 // dotenv for handling environment variables
 const dotenv = require('dotenv');
 dotenv.config();
-// Assignment of environment variables
+// Assignment of environment variables for database access
 const dbHost = process.env.dbHost;
 const dbUser = process.env.dbUser;
 const dbName = process.env.dbName;
 const dbPass = process.env.dbPass;
 const dbPort = process.env.dbPort;
+const isDev = process.env.isDev;
 
 // filesystem
 const fs = require('fs');
 
-// D.js
+// Discord.js
 const Discord = require('discord.js');
 
 // Fuzzy text matching for db lookups
 const FuzzySearch = require('fuzzy-search');
 
-// Various imports
+// Various imports from other files
 const config = require('./config.json');
 const strings = require('./strings.json');
 const slashCommandFiles = fs.readdirSync('./slash-commands/').filter(file => file.endsWith('.js'));
 const dotCommandFiles = fs.readdirSync('./dot-commands/').filter(file => file.endsWith('.js'));
 
-// MySQL
+// MySQL database connection
 const mysql = require('mysql');
 const db = new mysql.createPool({
 	connectionLimit: 10,
@@ -36,7 +37,9 @@ const db = new mysql.createPool({
 });
 
 const functions = {
+	// Functions for managing and creating Collections
 	collections: {
+		// Create the collection of slash commands
 		slashCommands(client) {
 			if (!client.slashCommands) client.slashCommands = new Discord.Collection();
 			client.slashCommands.clear();
@@ -46,13 +49,13 @@ const functions = {
 					client.slashCommands.set(slashCommand.data.name, slashCommand);
 				}
 			}
-			if (config.isDev) console.log('Slash Commands Collection Built');
+			if (isDev) console.log('Slash Commands Collection Built');
 		},
 		setvalidCommands(client) {
 			for (const entry of client.dotCommands.map(command => command.name)) {
 				config.validCommands.push(entry);
 			}
-			if (config.isDev) console.log('Valid Commands Added to Config');
+			if (isDev) console.log('Valid Commands Added to Config');
 		},
 		dotCommands(client) {
 			if (!client.dotCommands) client.dotCommands = new Discord.Collection();
@@ -61,7 +64,7 @@ const functions = {
 				const dotCommand = require(`./dot-commands/${file}`);
 				client.dotCommands.set(dotCommand.name, dotCommand);
 			}
-			if (config.isDev) console.log('Dot Commands Collection Built');
+			if (isDev) console.log('Dot Commands Collection Built');
 		},
 		gifs(rows, client) {
 			if (!client.gifs) client.gifs = new Discord.Collection();
@@ -74,7 +77,7 @@ const functions = {
 				};
 				client.gifs.set(gif.name, gif);
 			}
-			if (config.isDev) console.log('GIFs Collection Built');
+			if (isDev) console.log('GIFs Collection Built');
 		},
 		joints(rows, client) {
 			if (!client.joints) client.joints = new Discord.Collection();
@@ -86,7 +89,7 @@ const functions = {
 				};
 				client.joints.set(joint.id, joint);
 			}
-			if (config.isDev) console.log('Joints Collection Built');
+			if (isDev) console.log('Joints Collection Built');
 		},
 		pastas(rows, client) {
 			if (!client.pastas) client.pastas = new Discord.Collection();
@@ -100,7 +103,7 @@ const functions = {
 				};
 				client.pastas.set(pasta.name, pasta);
 			}
-			if (config.isDev) console.log('Pastas Collection Built');
+			if (isDev) console.log('Pastas Collection Built');
 		},
 		requests(rows, client) {
 			if (!client.requests) client.requests = new Discord.Collection();
@@ -113,7 +116,7 @@ const functions = {
 				};
 				client.requests.set(request.id, request);
 			}
-			if (config.isDev) console.log('Requests Collection Built');
+			if (isDev) console.log('Requests Collection Built');
 		},
 		strains(rows, client) {
 			if (!client.strains) client.strains = new Discord.Collection();
@@ -125,7 +128,7 @@ const functions = {
 				};
 				client.strains.set(strain.name, strain);
 			}
-			if (config.isDev) console.log('Strains Collection Built');
+			if (isDev) console.log('Strains Collection Built');
 		}
 	},
 	dot: {
@@ -133,15 +136,15 @@ const functions = {
 			const commandData = {};
 			// Split the message content at the final instance of a period
 			const finalPeriod = message.content.lastIndexOf('.');
-			if (finalPeriod < 0) {
+			// If the final period is the last character, or doesn't exist
+			if (finalPeriod <= 0) {
 				commandData.isCommand = false;
-				commandData.args = message.content.slice(0,finalPeriod).toLowerCase();
-				commandData.command = message.content.slice(finalPeriod).replace('.','').toLowerCase();
-				commandData.author = `${message.author.username}#${message.author.discriminator}`;
 				return commandData;
 			}
 			commandData.isCommand = true;
+			// Get the first part of the message, everything leading up to the final period
 			commandData.args = message.content.slice(0,finalPeriod).toLowerCase();
+			// Get the last part of the message, everything after the final period
 			commandData.command = message.content.slice(finalPeriod).replace('.','').toLowerCase();
 			commandData.author = `${message.author.username}#${message.author.discriminator}`;
 			return this.checkCommand(commandData);
@@ -150,6 +153,8 @@ const functions = {
 			if (commandData.isCommand) {
 				const validCommands = require('./config.json').validCommands;
 				commandData.isValid = validCommands.includes(commandData.command);
+				// Add exceptions for messages that contain only a link
+				if (commandData.args.startsWith('http')) commandData.isValid = false;
 			}
 			else {
 				commandData.isValid = false;

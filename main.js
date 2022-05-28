@@ -4,6 +4,7 @@
 const dotenv = require('dotenv');
 dotenv.config();
 const token = process.env.TOKEN;
+const statusChannelId = process.env.statusChannelId;
 
 // Discord.JS
 const { Client, Intents } = require('discord.js');
@@ -26,7 +27,7 @@ const { MessageActionRow, MessageButton } = require('discord.js');
 const fn = require('./functions.js');
 const config = require('./config.json');
 const strings = require('./strings.json');
-config.isDev = process.env.isDev;
+const isDev = process.env.isDev;
 
 client.once('ready', () => {
 	fn.collections.slashCommands(client);
@@ -38,7 +39,7 @@ client.once('ready', () => {
 	fn.download.requests(client);
 	fn.download.strains(client);
 	console.log('Ready!');
-	client.channels.fetch(config.devChannelId).then(channel => {
+	client.channels.fetch(statusChannelId).then(channel => {
 		channel.send(`I'm ready! ${new Date().toISOString()}`);
 	});
 });
@@ -46,7 +47,7 @@ client.once('ready', () => {
 // slash-commands
 client.on('interactionCreate', async interaction => {
 	if (interaction.isCommand()) {
-		if (config.isDev) {
+		if (isDev) {
 			console.log(interaction);
 		}
 		const { commandName } = interaction;
@@ -189,6 +190,7 @@ client.on('messageCreate', message => {
 	if (lowerContent.includes('big') && lowerContent.includes('doinks')) message.reply('gang.');
 	if (lowerContent.includes('ligma')) message.reply('ligma balls, goteem');
 
+	// Break the message down into its components and analyze it
 	const commandData = fn.dot.getCommandData(message);
 	console.log(commandData);
 
