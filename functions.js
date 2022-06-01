@@ -336,28 +336,28 @@ const functions = {
 	},
 	upload: {
 		request(commandData, client) {
-			const query = `INSERT INTO requests (author, request, status) VALUES ('${db.escape(commandData.author)}','${db.escape(commandData.args)}','Active')`;
+			const query = `INSERT INTO requests (author, request, status) VALUES (${db.escape(commandData.author)},${db.escape(commandData.args)},'Active')`;
 			db.query(query, (err, rows, fields) => {
 				if (err) throw err;
 				functions.download.requests(client);
 			});
 		},
 		pasta(pastaData, client) {
-			const query = `INSERT INTO pastas (name, content) VALUES ('${db.escape(pastaData.name)}','${db.escape(pastaData.content)}')`;
+			const query = `INSERT INTO pastas (name, content) VALUES (${db.escape(pastaData.name)},${db.escape(pastaData.content)})`;
 			db.query(query, (err, rows, fields) => {
 				if (err) throw err;
 				functions.download.pastas(client);
 			});
 		},
 		joint(content, client) {
-			const query = `INSERT INTO joints (content) VALUES ('${db.escape(content)}')`;
+			const query = `INSERT INTO joints (content) VALUES (${db.escape(content)})`;
 			db.query(query, (err, rows, fields) => {
 				if (err) throw err;
 				functions.download.joints(client);
 			});
 		},
 		gif(gifData, client) {
-			const query = `INSERT INTO gifs (name, embed_url) VALUES ('${db.escape(gifData.name)}', '${db.escape(gifData.embed_url)}')`;
+			const query = `INSERT INTO gifs (name, embed_url) VALUES (${db.escape(gifData.name)}, ${db.escape(gifData.embed_url)})`;
 			db.query(query, (err, rows, fields) => {
 				if (err) throw err;
 				functions.download.gifs(client);
@@ -395,7 +395,7 @@ const functions = {
 		},
 		strain(commandData, message) {
 			const { strainName } = commandData;
-			const query = `SELECT id, name, type, effects, ailment, flavor FROM strains WHERE name = '${db.escape(strainName)}'`;
+			const query = `SELECT id, name, type, effects, ailment, flavor FROM strains WHERE name = ${db.escape(strainName)}`;
 			db.query(query, (err, rows, fields) => {
 				if (rows != undefined) {
 					commandData.strainInfo = {
