@@ -27,14 +27,18 @@ const dotCommandFiles = fs.readdirSync('./dot-commands/').filter(file => file.en
 
 // MySQL database connection
 const mysql = require('mysql');
-const db = new mysql.createPool({
-	connectionLimit: 10,
-	host: dbHost,
-	user: dbUser,
-	password: dbPass,
-	database: dbName,
-	port: dbPort,
-});
+try {
+	const db = new mysql.createPool({
+		connectionLimit: 10,
+		host: dbHost,
+		user: dbUser,
+		password: dbPass,
+		database: dbName,
+		port: dbPort,
+	});
+} catch (error) {
+	console.error(error);
+}
 
 const functions = {
 	// Functions for managing and creating Collections
