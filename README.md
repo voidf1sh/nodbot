@@ -16,3 +16,5 @@ Use the `/help` command to see the bot's help message.
 1. ~~Sanitize inputs for SQL queries.~~ Done.
 2. ~~Move environment variables so they don't get included in the image.~~
 3. Implement error handling on all actions.
+4. Ephemeral responses to some/most slash commands.
+5. Comment the code! Document!
