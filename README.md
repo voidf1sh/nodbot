@@ -18,3 +18,4 @@ Use the `/help` command to see the bot's help message.
 3. Implement error handling on all actions.
 4. Ephemeral responses to some/most slash commands.
 5. Comment the code! Document!
+6. Check for and create database tables if necessary. Handle errors.
