@@ -12,7 +12,7 @@ module.exports = {
 	description: 'Send a GIF',
 	usage: '<GIF name or Search Query>.gif',
 	execute(message, commandData) {
-		if (message.deletable) message.delete();
+		// if (message.deletable) message.delete();
 		const client = message.client;
 		if (!client.gifs.has(commandData.args)) {
 			tenor.Search.Query(commandData.args, 1).then(res => {
@@ -22,8 +22,9 @@ module.exports = {
 				};
 				commandData.embed_url = res[0].media[0].gif.url;
 				// message.reply(fn.embeds.gif(commandData));
-				message.channel.send(`> ${commandData.author} - ${commandData.args}.gif`);
-				message.channel.send(commandData.embed_url);
+				// message.channel.send(`> ${commandData.author} - ${commandData.args}.gif`);
+				// message.channel.send(commandData.embed_url);
+				message.reply(commandData.embed_url);
 			}).catch(err => console.error(err));
 		} else {
 			// message.reply(commandData.args + ' requested by ' + message.author.username + '\n' + client.gifs.get(commandData.args).embed_url);
