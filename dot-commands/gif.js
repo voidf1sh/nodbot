@@ -30,8 +30,9 @@ module.exports = {
 			// message.reply(commandData.args + ' requested by ' + message.author.username + '\n' + client.gifs.get(commandData.args).embed_url);
 			commandData.embed_url = client.gifs.get(commandData.args).embed_url;
 			// message.reply(fn.embeds.gif(commandData));
-			message.channel.send(`> ${commandData.author} - ${commandData.args}.gif`);
-			message.channel.send(commandData.embed_url);
+			// message.channel.send(`> ${commandData.author} - ${commandData.args}.gif`);
+			// message.channel.send(commandData.embed_url);
+			message.reply(commandData.embed_url);
 		}
 	}
 }
