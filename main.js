@@ -191,14 +191,8 @@ client.on('messageCreate', message => {
 	if (lowerContent.includes('ligma')) message.reply('ligma balls, goteem');
 
 	// Break the message down into its components and analyze it
-	try {
-		const commandData = fn.dot.getCommandData(message);
-		if(isDev) console.log(commandData);
-	} catch(error) {
-		console.error(error);
-		message.reply('There was an error trying to execute that command.');
-	}
-
+	const commandData = fn.dot.getCommandData(message);
+	console.log(commandData);
 
 	if (commandData.isValid && commandData.isCommand) {
 		try {
@@ -210,11 +204,6 @@ client.on('messageCreate', message => {
 		}
 	}
 	return;
-});
-
-process.on("uncaughtException", err => {
-	console.error('There was an uncaught error: ', err);
-	process.exit(1);
 });
 
 client.login(token);
