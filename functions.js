@@ -215,12 +215,9 @@ const functions = {
 			helpEmbed.addField('Dot Commands', strings.help.dot);
 			helpEmbed.addFields(dotCommandsFields);
 
-			return { 
-				embeds: [
-					helpEmbed
-				],
-				ephemeral: true
-			};
+			return { embeds: [
+				helpEmbed
+			]};
 		},
 		gif(commandData) {
 			return { embeds: [new Discord.MessageEmbed()
