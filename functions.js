@@ -217,7 +217,7 @@ const functions = {
 
 			return { embeds: [
 				helpEmbed
-			]};
+			], ephemeral: true};
 		},
 		gif(commandData) {
 			return { embeds: [new Discord.MessageEmbed()

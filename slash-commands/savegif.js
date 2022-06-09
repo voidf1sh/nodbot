@@ -50,7 +50,7 @@ module.exports = {
 					embed_url: row.media[0].gif.url,
 				});
 			}
-			interaction.reply({ content: strings.temp.gifs[0].embed_url, components: [actionRow] });
+			interaction.reply({ content: strings.temp.gifs[0].embed_url, components: [actionRow], ephemeral: true });
 		});
 	},
 };
