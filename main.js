@@ -107,18 +107,12 @@ client.on('interactionCreate', async interaction => {
 				interaction.update(strings.temp.gifs[newIndex].embed_url);
 				break;
 			case 'confirmGif':
-				interaction.update({ content: 'GIF Confirmed, what should I save it as?\n(*don\'t* include the .gif)', components: [] });
-				const collector = fn.collect.gifName(interaction);
-				collector.on('collect', m => {
-					const gifData = {
-						name: m.content.toLowerCase(),
-						embed_url: strings.temp.gifs[strings.temp.gifIndex].embed_url,
-					};
-					fn.upload.gif(gifData, client);
-					m.reply(`I've saved the GIF as ${gifData.name}.gif`);
-					fn.download.gifs(interaction.client);
-					collector.stop('success');
-				});
+				const gifData = {
+					name: strings.temp.gifName,
+					embed_url: strings.temp.gifs[strings.temp.gifIndex].embed_url,
+				};
+				fn.upload.gif(gifData, client);
+				interaction.update({ content: `I've saved the GIF as ${gifData.name}.gif`, components: [] });
 				fn.download.gifs(interaction.client);
 				break;
 			case 'nextGif':

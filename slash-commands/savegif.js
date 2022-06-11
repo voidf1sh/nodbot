@@ -18,6 +18,10 @@ module.exports = {
 		.addStringOption(option =>
 			option.setName('query')
 				.setDescription('Search Query')
+				.setRequired(true))
+		.addStringOption(option =>
+			option.setName('name')
+				.setDescription('What to save the gif as')
 				.setRequired(true)),
 	async execute(interaction) {
 		// Previous GIF button
@@ -33,6 +37,7 @@ module.exports = {
 
 		// Get the query
 		const query = interaction.options.getString('query');
+		strings.temp.gifName = interaction.options.getString('name').toLowerCase();
 
 		// Search Tenor for the GIF
 		tenor.Search.Query(query, '10').then(res => {
