@@ -10,6 +10,8 @@ const dbPass = process.env.dbPass;
 const dbPort = process.env.dbPort;
 const isDev = process.env.isDev;
 
+const ownerId = process.env.ownerId;
+
 // filesystem
 const fs = require('fs');
 
@@ -435,12 +437,21 @@ const functions = {
 		}
 	},
 	// Parent-Level functions (miscellaneuous)
-	closeRequest(requestId, client) {
-		const query = `UPDATE requests SET status = 'Closed' WHERE id = ${db.escape(requestId)}`;
-		db.query(query, (err, rows, fields) => {
-			if (err) throw err;
-			functions.download.requests(client);
-		});
+	closeRequest(requestId, interaction) {
+		if (interaction.user.id == ownerId) {
+			const { client } = interaction;
+			const query = `UPDATE requests SET status = 'Closed' WHERE id = ${db.escape(requestId)}`;
+			db.query(query, (err, rows, fields) => {
+				if (err) throw err;
+				functions.download.requests(client);
+			});
+			interaction.reply({ content: `Request #${requestId} has been closed.`, ephemeral: true });
+		} else {
+			interaction.reply({ content: 'You do not have permission to do that.', ephemeral: true });
+		}
+		if (isDev) {
+			console.log(requestId, interaction, ownerId);
+		}
 	},
 	spongebob(commandData) {
 		let flipper = 0;
