@@ -2,7 +2,8 @@
 .vscode
 package-lock.json
 .VSCodeCounter/
-
+env.dev
+env.prod
 
 # Custom folders
 # gifs/*
