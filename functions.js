@@ -54,8 +54,12 @@ const functions = {
 			if (isDev) console.log('Slash Commands Collection Built');
 		},
 		setvalidCommands(client) {
-			for (const entry of client.dotCommands.map(command => command.name)) {
-				config.validCommands.push(entry);
+			for (const entry of client.dotCommands.map(command => command)) {
+				config.validCommands.push(entry.name);
+				if (entry.alias != undefined) {
+					config.validCommands.push(entry.alias);
+				}
+
 			}
 			if (isDev) console.log('Valid Commands Added to Config');
 		},
@@ -65,6 +69,9 @@ const functions = {
 			for (const file of dotCommandFiles) {
 				const dotCommand = require(`./dot-commands/${file}`);
 				client.dotCommands.set(dotCommand.name, dotCommand);
+				if (dotCommand.alias != undefined) {
+					client.dotCommands.set(dotCommand.alias, dotCommand);
+				}
 			}
 			if (isDev) console.log('Dot Commands Collection Built');
 		},
