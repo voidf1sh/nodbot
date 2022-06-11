@@ -296,7 +296,6 @@ const functions = {
 		},
 		strain(commandData, message) {
 			const strainEmbed = new Discord.MessageEmbed()
-				.setAuthor(`${commandData.command} #${commandData.strainInfo.id}`)
 				.setTimestamp()
 				.setFooter(commandData.author);
 			const { strainInfo } = commandData;
