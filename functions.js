@@ -257,7 +257,7 @@ const functions = {
 			const pastasString = pastasArray.join('\n');
 			pastasEmbed.setDescription(pastasString);
 
-			return { embeds: [pastasEmbed] };
+			return { embeds: [pastasEmbed], ephemeral: true };
 		},
 		gifs(commandData) {
 			const gifsArray = [];

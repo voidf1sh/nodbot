@@ -28,6 +28,6 @@ module.exports = {
 				name: row.name,
 			});
 		}
-		interaction.reply({ content: fn.embeds.pastas(commandData), ephemeral: true });
+		interaction.reply(fn.embeds.pastas(commandData));
 	},
 };
