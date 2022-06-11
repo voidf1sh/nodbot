@@ -292,7 +292,7 @@ const functions = {
 
 			requestsEmbed.setDescription(requestsArray.join('\n'));
 
-			return { embeds: [requestsEmbed]};
+			return { embeds: [requestsEmbed], ephemeral: true };
 		},
 		strain(commandData, message) {
 			const strainEmbed = new Discord.MessageEmbed()
