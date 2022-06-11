@@ -370,6 +370,41 @@ const functions = {
 				if (err) throw err;
 				functions.download.gifs(client);
 			});
+		},
+		setup(interaction) {
+			/* Tables:
+			 *	- gifs
+			 *	- joints
+			 *	- pastas
+			 *	- requests
+			 *	- strains */
+			const gifsQuery = "CREATE TABLE 'gifs' (id int(11), name varchar(100), embed_url varchar(1000), PRIMARY KEY(id))";
+			const jointsQuery = "CREATE TABLE 'joints' (id int(11), content varchar(1000), PRIMARY KEY(id))";
+			const pastasQuery = "CREATE TABLE 'pastas' (id int(11), name varchar(100), content varchar(1900), iconurl varchar(200) DEFAULT 'https://cdn.discordapp.com/avatars/513184762073055252/12227aa23a06d5178853e59b72c7487b.webp?size=128', PRIMARY KEY(id))";
+			const requestsQuery = "CREATE TABLE 'requests' (id int(11), author varchar(100), request varchar(1000), status varchar(10) DEFAULT 'Active', PRIMARY KEY(id))";
+			const strainsQuery = "CREATE TABLE 'strains' (id smallint(6), name varchar(60), type varchar(10), effects varchat(80), ailment varchar(70), flavor varchar(30), PRIMARY KEY(id))";
+
+			// Check for owner
+			if (interaction.user.id == ownerId) {
+				db.query(gifsQuery, (err, rows, fields) => {
+					if (err) throw err;
+				});
+				db.query(jointsQuery, (err, rows, fields) => {
+					if (err) throw err;
+				});
+				db.query(pastasQuery, (err, rows, fields) => {
+					if (err) throw err;
+				});
+				db.query(requestsQuery, (err, rows, fields) => {
+					if (err) throw err;
+				});
+				db.query(strainsQuery, (err, rows, fields) => {
+					if (err) throw err;
+				});
+				return 'I\'ve created the required tables. Please check your database to validate this.';
+			} else {
+				return 'Sorry, you don\'t have permission to do that.';
+			}
 		}
 	},
 	download: {
