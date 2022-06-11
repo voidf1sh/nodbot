@@ -12,6 +12,6 @@ module.exports = {
 				.setRequired(true)),
 	async execute(interaction) {
 		fn.upload.joint(interaction.options.getString('joint-content'), interaction.client);
-		interaction.reply(`The joint has been rolled${emoji.joint}`);
+		interaction.reply({ content: `The joint has been rolled${emoji.joint}`, ephemeral: true });
 	},
 };

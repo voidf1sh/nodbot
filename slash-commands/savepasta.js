@@ -19,6 +19,6 @@ module.exports = {
 			content: interaction.options.getString('pasta-content'),
 		};
 		fn.upload.pasta(pastaData, interaction.client);
-		interaction.reply(`The copypasta has been saved as ${pastaData.name}.pasta`);
+		interaction.reply({content: `The copypasta has been saved as ${pastaData.name}.pasta`, ephemeral: true });
 	},
 };

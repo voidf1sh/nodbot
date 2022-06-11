@@ -15,6 +15,6 @@ module.exports = {
 		fn.download.joints(client);
 		fn.download.requests(client);
 		fn.download.strains(client);
-		interaction.reply('Reloaded!');
+		interaction.reply({ content: 'Reloaded!', ephemeral: true });
 	},
 };

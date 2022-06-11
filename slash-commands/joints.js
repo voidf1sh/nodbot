@@ -10,6 +10,6 @@ module.exports = {
 		interaction.client.joints.map(e => {
 			joints.push(e.content);
 		});
-		interaction.reply('Here are all the `.joint` phrases I have saved:\n\n' + joints.join('\n'));
+		interaction.reply({ content: 'Here are all the `.joint` phrases I have saved:\n\n' + joints.join('\n'), ephemeral: true });
 	},
 };

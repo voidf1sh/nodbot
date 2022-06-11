@@ -8,7 +8,7 @@ module.exports = {
 		.setDescription('Get a list of currently saved copypastas.'),
 	async execute(interaction) {
 		if (!interaction.client.pastas) {
-			interaction.reply('For some reason I don\'t have access to the collection of copypastas. Sorry about that!');
+			interaction.reply({ content: 'For some reason I don\'t have access to the collection of copypastas. Sorry about that!', ephemeral: true });
 			return;
 		}
 		const commandData = {
@@ -28,6 +28,6 @@ module.exports = {
 				name: row.name,
 			});
 		}
-		interaction.reply(fn.embeds.pastas(commandData));
+		interaction.reply({ content: fn.embeds.pastas(commandData), ephemeral: true });
 	},
 };
