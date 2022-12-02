@@ -7,6 +7,10 @@ const tenor = require('tenorjs').client({
     "DateFormat": "D/MM/YYYY - H:mm:ss A" // Change this accordingly
 });
 
+// TODO: Tenor has changed API versions, switch from TenorJS (unmaintained) to axios for
+// 		general API usage. See: https://github.com/Jinzulen/TenorJS/issues/12
+//		see also: https://developers.google.com/tenor/guides/migrate-from-v1
+
 module.exports = {
 	name: 'gif',
 	description: 'Send a GIF',
