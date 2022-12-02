@@ -61,7 +61,7 @@ const functions = {
 				}
 
 			}
-			if (isDev) console.log(`Valid Commands Added to Config\n${config.validCommands}`);
+			if (isDev) console.log('Valid Commands Added to Config');
 		},
 		dotCommands(client) {
 			if (!client.dotCommands) client.dotCommands = new Discord.Collection();
@@ -133,10 +133,9 @@ const functions = {
 			for (const row of rows) {
 				const strain = {
 					id: row.id,
-					name: row.strain,
+					name: row.name,
 				};
 				client.strains.set(strain.name, strain);
-				if (isDev) console.log(strain)
 			}
 			if (isDev) console.log('Strains Collection Built');
 		}
@@ -146,7 +145,6 @@ const functions = {
 			const commandData = {};
 			// Split the message content at the final instance of a period
 			const finalPeriod = message.content.lastIndexOf('.');
-			if(isDev) console.log(message.content);
 			// If the final period is the last character, or doesn't exist
 			if (finalPeriod < 0) {
 				if (isDev) console.log(finalPeriod);
@@ -312,8 +310,7 @@ const functions = {
 			strainEmbed.addFields([
 				{
 					name: 'Strain Name',
-					value: `${strainInfo.strain}`,
-					inline: true,
+					value: `${strainInfo.name}`,
 				},
 				{
 					name: 'Type',
@@ -447,13 +444,12 @@ const functions = {
 		},
 		strain(commandData, message) {
 			const { strainName } = commandData;
-			const query = `SELECT id, strain, type, effects, description, flavor, rating FROM strains WHERE strain = ${db.escape(strainName)}`;
+			const query = `SELECT id, name, type, effects, description, flavor, rating FROM strains WHERE name = ${db.escape(strainName)}`;
 			db.query(query, (err, rows, fields) => {
-				if (err) throw err;
 				if (rows != undefined) {
 					commandData.strainInfo = {
 						id: `${rows[0].id}`,
-						strain: `${rows[0].strain}`,
+						name: `${rows[0].name}`,
 						type: `${rows[0].type}`,
 						effects: `${rows[0].effects}`,
 						description: `${rows[0].description}`,
@@ -465,7 +461,7 @@ const functions = {
 			});
 		},
 		strains(client) {
-			const query = 'SELECT id, strain FROM strains';
+			const query = 'SELECT id, name FROM strains';
 			db.query(query, (err, rows, fields) => {
 				if (err) throw err;
 				functions.collections.strains(rows, client);
