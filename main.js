@@ -40,7 +40,7 @@ client.once('ready', () => {
 	fn.download.strains(client);
 	console.log('Ready!');
 	client.channels.fetch(statusChannelId).then(channel => {
-		channel.send(`I'm ready! ${new Date().toISOString()}`);
+		channel.send(`${new Date().toISOString()} -- <@${process.env.ownerId}>\nStartup Sequence Complete`);
 	});
 });
 
