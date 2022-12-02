@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "3.0.1-dev" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "3.0.1-dev" ]
     
 env:
   DHUB_UNAME: ${{ secrets.DHUB_UNAME }}
@@ -19,7 +19,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag v0idf1sh/nodbot
+      run: docker build . --file Dockerfile --tag v0idf1sh/nodbot-dev
     - name: Log into Docker Hub
       run: docker login -u $DHUB_UNAME -p $DHUB_PWORD
     - name: Push image to Docker Hub
