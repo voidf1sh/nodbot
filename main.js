@@ -30,7 +30,6 @@ const strings = require('./strings.json');
 const isDev = process.env.isDev;
 
 client.once('ready', () => {
-	console.log(process.env)
 	fn.collections.slashCommands(client);
 	fn.collections.dotCommands(client);
 	fn.collections.setvalidCommands(client);
