@@ -61,7 +61,7 @@ const functions = {
 				}
 
 			}
-			if (isDev) console.log('Valid Commands Added to Config');
+			if (isDev) console.log(`Valid Commands Added to Config\n${config.validCommands}`);
 		},
 		dotCommands(client) {
 			if (!client.dotCommands) client.dotCommands = new Discord.Collection();
@@ -133,9 +133,10 @@ const functions = {
 			for (const row of rows) {
 				const strain = {
 					id: row.id,
-					name: row.name,
+					name: row.strain,
 				};
 				client.strains.set(strain.name, strain);
+				// if (isDev) console.log(strain)
 			}
 			if (isDev) console.log('Strains Collection Built');
 		}
@@ -145,6 +146,7 @@ const functions = {
 			const commandData = {};
 			// Split the message content at the final instance of a period
 			const finalPeriod = message.content.lastIndexOf('.');
+			if(isDev) console.log(message.content);
 			// If the final period is the last character, or doesn't exist
 			if (finalPeriod < 0) {
 				if (isDev) console.log(finalPeriod);
@@ -310,7 +312,8 @@ const functions = {
 			strainEmbed.addFields([
 				{
 					name: 'Strain Name',
-					value: `${strainInfo.name}`,
+					value: `${strainInfo.strain}`,
+					inline: true,
 				},
 				{
 					name: 'Type',
@@ -323,14 +326,19 @@ const functions = {
 					inline: true,
 				},
 				{
-					name: 'Treats',
-					value: `${strainInfo.ailments}`,
+					name: 'Flavor',
+					value: `${strainInfo.flavor}`,
 					inline: true,
 				},
 				{
 					name: 'Rating',
 					value: `${strainInfo.rating}⭐️s`,
 					inline: true,
+				},
+				{
+					name: 'Description',
+					value: `${strainInfo.description}`,
+					inline: false,
 				},
 			]);
 
@@ -439,23 +447,25 @@ const functions = {
 		},
 		strain(commandData, message) {
 			const { strainName } = commandData;
-			const query = `SELECT id, name, type, effects, ailment, flavor FROM strains WHERE name = ${db.escape(strainName)}`;
+			const query = `SELECT id, strain, type, effects, description, flavor, rating FROM strains WHERE strain = ${db.escape(strainName)}`;
 			db.query(query, (err, rows, fields) => {
+				if (err) throw err;
 				if (rows != undefined) {
 					commandData.strainInfo = {
 						id: `${rows[0].id}`,
-						name: `${rows[0].name}`,
+						strain: `${rows[0].strain}`,
 						type: `${rows[0].type}`,
 						effects: `${rows[0].effects}`,
-						ailments: `${rows[0].ailment}`,
+						description: `${rows[0].description}`,
 						flavor: `${rows[0].flavor}`,
+						rating: `${rows[0].rating}`,
 					};
 					functions.embeds.strain(commandData, message);
 				}
 			});
 		},
 		strains(client) {
-			const query = 'SELECT id, name FROM strains';
+			const query = 'SELECT id, strain FROM strains';
 			db.query(query, (err, rows, fields) => {
 				if (err) throw err;
 				functions.collections.strains(rows, client);
