@@ -136,7 +136,7 @@ const functions = {
 					name: row.strain,
 				};
 				client.strains.set(strain.name, strain);
-				// if (isDev) console.log(strain)
+				if (isDev) console.log(strain)
 			}
 			if (isDev) console.log('Strains Collection Built');
 		}
