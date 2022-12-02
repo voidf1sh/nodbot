@@ -328,8 +328,8 @@ const functions = {
 					inline: true,
 				},
 				{
-					name: 'Flavor',
-					value: `${strainInfo.flavor}`,
+					name: 'Rating',
+					value: `${strainInfo.rating}⭐️s`,
 					inline: true,
 				},
 			]);
