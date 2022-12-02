@@ -19,7 +19,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag v0idf1sh/nodbot-dev
+      run: docker build . --file Dockerfile --tag v0idf1sh/nodbot
     - name: Log into Docker Hub
       run: docker login -u $DHUB_UNAME -p $DHUB_PWORD
     - name: Push image to Docker Hub
