@@ -7,8 +7,8 @@ on:
     branches: [ "main" ]
     
 env:
-  DHUB_UNAME: ${{ secrets.DHUB_UNAME }}
-  DHUB_PWORD: ${{ secrets.DHUB_PWORD }}
+  DHUB_UNAME: {{ secrets.DHUB_UNAME }}
+  DHUB_PWORD: {{ secrets.DHUB_PWORD }}
 
 jobs:
 
