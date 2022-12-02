@@ -41,7 +41,7 @@ client.once('ready', () => {
 	fn.download.strains(client);
 	console.log('Ready!');
 	client.channels.fetch(statusChannelId).then(channel => {
-		channel.send(`<@${process.env.ownerId}> I'm ready! ${new Date().toISOString()}`);
+		channel.send(`${new Date().toISOString()} -- <@${process.env.ownerId}>\nNodding Activated.`);
 	});
 });
 
