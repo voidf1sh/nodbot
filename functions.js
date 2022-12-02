@@ -328,8 +328,13 @@ const functions = {
 					inline: true,
 				},
 				{
+					name: 'Rating',
+					value: `${strainInfo.rating}⭐️`,
+					inline: true,
+				},
+				{
 					name: 'Description',
-					value: `${strainInfo.ailments}`,
+					value: `${strainInfo.description}`,
 					inline: false,
 				},
 			]);
@@ -439,7 +444,7 @@ const functions = {
 		},
 		strain(commandData, message) {
 			const { strainName } = commandData;
-			const query = `SELECT id, name, type, effects, ailment, flavor FROM strains WHERE name = ${db.escape(strainName)}`;
+			const query = `SELECT id, name, type, effects, description, flavor, rating FROM strains WHERE name = ${db.escape(strainName)}`;
 			db.query(query, (err, rows, fields) => {
 				if (rows != undefined) {
 					commandData.strainInfo = {
@@ -447,8 +452,9 @@ const functions = {
 						name: `${rows[0].name}`,
 						type: `${rows[0].type}`,
 						effects: `${rows[0].effects}`,
-						ailments: `${rows[0].ailment}`,
+						description: `${rows[0].description}`,
 						flavor: `${rows[0].flavor}`,
+						rating: `${rows[0].rating}`,
 					};
 					functions.embeds.strain(commandData, message);
 				}
