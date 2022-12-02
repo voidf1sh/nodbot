@@ -323,14 +323,14 @@ const functions = {
 					inline: true,
 				},
 				{
-					name: 'Treats',
-					value: `${strainInfo.ailments}`,
-					inline: true,
-				},
-				{
 					name: 'Flavor',
 					value: `${strainInfo.flavor}`,
 					inline: true,
+				},
+				{
+					name: 'Description',
+					value: `${strainInfo.ailments}`,
+					inline: false,
 				},
 			]);
 
