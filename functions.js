@@ -332,7 +332,7 @@ const functions = {
 				},
 				{
 					name: 'Rating',
-					value: `${strainInfo.rating}⭐️`,
+					value: `${strainInfo.rating}⭐️s`,
 					inline: true,
 				},
 				{
