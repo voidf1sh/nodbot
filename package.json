@@ -12,7 +12,7 @@
     "dotenv": "^10.0.0",
     "fuzzy-search": "^3.2.1",
     "mysql": "^2.18.1",
-    "tenorjs": "^1.0.8"
+    "tenorjs": "^1.0.10"
   },
   "engines": {
     "node": "16.x"
