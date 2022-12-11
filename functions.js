@@ -483,6 +483,7 @@ const functions = {
 				}
 			},
 			submit(strainName) {
+				const query = ``
 				return strainName;
 			}
 		}
