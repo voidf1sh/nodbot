@@ -449,7 +449,6 @@ const functions = {
 			const { strainName } = commandData;
 			const query = `SELECT id, strain, type, effects, description, flavor, rating FROM strains WHERE strain = ${db.escape(strainName)}`;
 			db.query(query, (err, rows, fields) => {
-				if (err) throw err;
 				if (rows != undefined) {
 					commandData.strainInfo = {
 						id: `${rows[0].id}`,
@@ -484,6 +483,7 @@ const functions = {
 				}
 			},
 			submit(strainName) {
+				const query = ``
 				return strainName;
 			}
 		}
