@@ -183,7 +183,7 @@ client.on('messageCreate', message => {
 	const lowerContent = message.content.toLowerCase();
 	if (lowerContent.includes('big') && lowerContent.includes('doinks')) message.reply('gang.');
 	if (lowerContent.includes('ligma')) message.reply('ligma balls, goteem');
-	if (lowerContent.includes('fr fr') || lowerContent.includes(':billed_cap:') || lowerContent.includes('ong')) message.reply('ongggg no :billed_cap: fr fr str8 bussin'); 
+	if (lowerContent.includes('frfr') || lowerContent.includes('fr fr') || lowerContent.includes('bussin') || lowerContent.includes(' ong') || lowerContent.startsWith('ong')) message.reply('ongggg no :billed_cap: fr fr str8 bussin'); 
 
 	// Break the message down into its components and analyze it
 	const commandData = fn.dot.getCommandData(message);
