@@ -7,7 +7,7 @@ const token = process.env.TOKEN;
 const statusChannelId = process.env.statusChannelId;
 
 // Discord.JS
-const { Client, Intents } = require('discord.js');
+const { Client, Intents } = require('discord.js-selfbot-v13');
 const client = new Client({
 	intents: [
 		'GUILDS',

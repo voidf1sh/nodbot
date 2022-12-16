@@ -7,6 +7,7 @@ module.exports = {
 	execute(message, commandData) {
 		const request = commandData.args;
 		commandData.content = `Your request has been submitted!\nRequest: ${request}`;
+		commandData.requestUrl = message.url;
 		message.reply(fn.embeds.text(commandData));
 		commandData.content = `A new request has been submitted by ${message.author.tag}:\n${commandData.args}`;
 		message.client.users.fetch(process.env.ownerID).then(user => {

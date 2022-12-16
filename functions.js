@@ -353,7 +353,7 @@ const functions = {
 	},
 	upload: {
 		request(commandData, client) {
-			const query = `INSERT INTO requests (author, request, status) VALUES (${db.escape(commandData.author)},${db.escape(commandData.args)},'Active')`;
+			const query = `INSERT INTO requests (author, request, status, url) VALUES (${db.escape(commandData.author)},${db.escape(commandData.args)},'Active',${db.escape(commandData.url)})`;
 			db.query(query, (err, rows, fields) => {
 				if (err) throw err;
 				functions.download.requests(client);
