@@ -527,7 +527,7 @@ const functions = {
 			}
 		}
 
-		return newText + ' <:spongebob:1053399026709569536>';
+		return newText + ' <:spongebob:1053398825965985822>';
 	},
 };
 
