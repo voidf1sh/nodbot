@@ -7,6 +7,11 @@ module.exports = {
 	description: 'SpOnGeBoB-iFy AnYtHiNg AuToMaTiCaLly',
 	usage: '<text to convert>.spongebob',
 	execute(message, commandData) {
-		message.reply(fn.spongebob(commandData));
+		// message.reply(fn.spongebob(commandData)).then(() => {
+		// 	message.delete();
+		// });
+		message.channel.send(fn.spongebob(commandData)).then(() => {
+			message.delete();
+		});
 	}
 }
