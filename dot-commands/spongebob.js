@@ -10,8 +10,6 @@ module.exports = {
 		// message.reply(fn.spongebob(commandData)).then(() => {
 		// 	message.delete();
 		// });
-		message.channel.send(fn.spongebob(commandData)).then(() => {
-			message.delete();
-		});
+		message.channel.send(fn.spongebob(commandData));
 	}
 }
