@@ -178,6 +178,7 @@ client.on('interactionCreate', async interaction => {
 client.on('messageCreate', message => {
 	// Some basic checking to prevent running unnecessary code
 	if (message.author.bot) return;
+	if (message.auther.id == client.user.id) return;
 
 	// Wildcard Responses, will respond if any message contains the trigger word(s), excluding self-messages
 	const lowerContent = message.content.toLowerCase();
