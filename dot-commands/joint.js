@@ -5,6 +5,7 @@ module.exports = {
 	name: 'joint',
 	description: 'Send a random weed-themed phrase.',
 	usage: '.joint',
+	alias: ['bong', 'blunt', 'bowl', 'pipe'],
 	execute(message, commandData) {
 		let joints = [];
 		for (const entry of message.client.joints.map(joint => joint.content)) {
