@@ -437,7 +437,7 @@ const functions = {
 	},
 	download: {
 		requests(client) {
-			const query = 'SELECT * FROM requests WHERE status = \'Active\' ORDER BY id ASC';
+			const query = 'SELECT * FROM requests WHERE status = \'Active\' ORDER BY id DESC LIMIT 10';
 			db.query(query, (err, rows, fields) => {
 				if (err) throw err;
 				functions.collections.requests(rows, client);
