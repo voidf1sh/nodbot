@@ -351,7 +351,7 @@ const functions = {
 				},
 				{
 					name: 'Rating',
-					value: `${strainInfo.rating}⭐️s`,
+					value: `⭐️${strainInfo.rating}`,
 					inline: true,
 				},
 				{
@@ -440,6 +440,23 @@ const functions = {
 				if (err) throw err;
 				functions.download.medicalAdvice(client);
 			});
+		},
+		strain(interaction) {
+			const strain = db.escape(interaction.options.getString('name'));
+			const type = db.escape(interaction.options.getString('type'));
+			const effects = db.escape(( interaction.options.getString('effects') || 'Unkown' ));
+			const description = db.escape(( interaction.options.getString('description') || 'Unknown' ));
+			const flavor = db.escape(( interaction.options.getString('flavor') || 'Unknown' ));
+			const rating = db.escape(( interaction.options.getString('rating') || '3' ));
+			const strainQuery = `INSERT INTO strains (strain, type, effects, description, flavor, rating) VALUES (${strain}, ${type}, ${effects}, ${description}, ${flavor}, ${rating})`;
+			console.log(strainQuery);
+			return new Promise((resolve, reject) => {
+				db.query(strainQuery, (err, rows, fields) => {
+					if (err) reject(err);
+					functions.download.strains(interaction.client);
+					resolve();
+				});
+			})
 		}
 	},
 	download: {
