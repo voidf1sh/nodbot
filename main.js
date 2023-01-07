@@ -38,6 +38,7 @@ client.once('ready', () => {
 	fn.download.joints(client);
 	fn.download.requests(client);
 	fn.download.strains(client);
+	fn.download.medicalAdvice(client);
 	console.log('Ready!');
 	client.channels.fetch(statusChannelId).then(channel => {
 		channel.send(`${new Date().toISOString()} -- <@${process.env.ownerId}>\nStartup Sequence Complete`);

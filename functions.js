@@ -139,7 +139,19 @@ const functions = {
 				// if (isDev) console.log(strain)
 			}
 			if (isDev) console.log('Strains Collection Built');
-		}
+		},
+		medicalAdvice(rows, client) {
+			if (!client.medicalAdviceCol) client.medicalAdviceColl = new Discord.Collection();
+			client.medicalAdviceColl.clear();
+			for (const row of rows) {
+				const medicalAdvice = {
+					id: row.id,
+					content: row.content
+				};
+				client.medicalAdviceColl.set(medicalAdvice.id, medicalAdvice);
+			}
+			if (isDev) console.log('Medical Advice Collection Built');
+		},
 	},
 	dot: {
 		getCommandData(message) {
@@ -414,6 +426,13 @@ const functions = {
 			} else {
 				return 'Sorry, you don\'t have permission to do that.';
 			}
+		},
+		medicalAdvice(content, client) {
+			const query = `INSERT INTO medical_advice (content) VALUES (${db.escape(content)})`;
+			db.query(query, (err, rows, fields) => {
+				if (err) throw err;
+				functions.download.medicalAdvice(client);
+			});
 		}
 	},
 	download: {
@@ -470,6 +489,13 @@ const functions = {
 				functions.collections.strains(rows, client);
 			});
 		},
+		medicalAdvice(client) {
+			const query = 'SELECT * FROM medical_advice ORDER BY id ASC';
+			db.query(query, (err, rows, fields) => {
+				if (err) throw err;
+				functions.collections.medicalAdvice(rows, client);
+			});
+		}
 	},
 	weed: {
 		strain: {
