@@ -10,8 +10,21 @@ module.exports = {
 		// message.reply(fn.spongebob(commandData)).then(() => {
 		// 	message.delete();
 		// });
-		message.channel.send(fn.spongebob(commandData)).then(() => {
-			message.delete();
-		});
+		if (message.reference != undefined) {
+			const repliedMessageId = message.reference.messageId;
+			message.channel.messages.fetch(repliedMessageId)
+				.then(repliedMessage => {
+					repliedMessage.reply(fn.spongebob({ args: repliedMessage.content })).then(() => {
+						message.delete();
+					});
+				})
+				.catch(err => {
+					console.error(err);
+				});
+		} else {
+			message.channel.send(fn.spongebob(commandData)).then(() => {
+				message.delete();
+			});
+		}
 	}
 }
