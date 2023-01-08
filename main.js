@@ -173,6 +173,19 @@ client.on('interactionCreate', async interaction => {
 				break;
 		}
 	}
+
+	// Handle autocomplete requests
+	if (interaction.isAutocomplete()) {
+		if (interaction.commandName == 'strain') {
+			const searchString = interaction.options.getFocused();
+			const choices = fn.weed.strain.lookup(searchString, interaction.client);
+			await interaction.respond(
+				choices.map(choice => ({ name: choice, value: choice }))
+			)
+		} else {
+			return;
+		}
+	}
 });
 
 // dot-commands

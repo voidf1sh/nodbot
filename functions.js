@@ -323,11 +323,9 @@ const functions = {
 
 			return { embeds: [requestsEmbed], ephemeral: true };
 		},
-		strain(commandData, message) {
+		strain(strainInfo, interaction) {
 			const strainEmbed = new Discord.MessageEmbed()
-				.setTimestamp()
-				.setFooter(commandData.author);
-			const { strainInfo } = commandData;
+				.setTimestamp();
 			strainEmbed.addFields([
 				{
 					name: 'Strain Name',
@@ -361,7 +359,7 @@ const functions = {
 				},
 			]);
 
-			message.reply({ embeds: [ strainEmbed ]});
+			interaction.reply({ embeds: [ strainEmbed ]});
 		},
 	},
 	collect: {
@@ -488,12 +486,11 @@ const functions = {
 				functions.collections.joints(rows, client);
 			});
 		},
-		strain(commandData, message) {
-			const { strainName } = commandData;
+		strain(strainName, interaction) {
 			const query = `SELECT id, strain, type, effects, description, flavor, rating FROM strains WHERE strain = ${db.escape(strainName)}`;
 			db.query(query, (err, rows, fields) => {
 				if (rows != undefined) {
-					commandData.strainInfo = {
+					const strainInfo = {
 						id: `${rows[0].id}`,
 						strain: `${rows[0].strain}`,
 						type: `${rows[0].type}`,
@@ -502,7 +499,7 @@ const functions = {
 						flavor: `${rows[0].flavor}`,
 						rating: `${rows[0].rating}`,
 					};
-					functions.embeds.strain(commandData, message);
+					functions.embeds.strain(strainInfo, interaction);
 				}
 			});
 		},
@@ -525,12 +522,7 @@ const functions = {
 		strain: {
 			lookup(strainName, client) {
 				const strainSearcher = new FuzzySearch(client.strains.map(e => e.name));
-				const name = strainSearcher.search(strainName)[0];
-				if (name != undefined) {
-					return name;
-				} else {
-					return false;
-				}
+				return strainSearcher.search(strainName).slice(0,25);
 			},
 			submit(strainName) {
 				const query = ``
