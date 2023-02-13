@@ -15,7 +15,7 @@ module.exports = {
 			message.channel.messages.fetch(repliedMessageId)
 				.then(repliedMessage => {
 					repliedMessage.reply(fn.spongebob({ args: repliedMessage.content })).then(() => {
-						message.delete();
+						if (message.deletable) message.delete();
 					});
 				})
 				.catch(err => {
@@ -23,7 +23,7 @@ module.exports = {
 				});
 		} else {
 			message.channel.send(fn.spongebob(commandData)).then(() => {
-				message.delete();
+				if (message.deletable) message.delete();
 			});
 		}
 	}
