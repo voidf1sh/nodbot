@@ -1,0 +1,24 @@
+{
+	"help": {
+		"title": "Title",
+		"content": "Some help content",
+		"footer": "Witty Text Here"
+	},
+	"embeds": {
+		"footer": "github/voidf1sh/discord-bot-template",
+		"color": "0x55FF55",
+		"errorTitle": "Error",
+		"errorColor": "0xFF0000",
+		"infoTitle": "Information",
+		"infoColor": "0x8888FF"
+	},
+	"emoji": {
+		"next": "⏭️",
+		"previous": "⏮️",
+		"confirm": "☑️",
+		"cancel": "❌"
+	},
+	"errors": {
+		"generalCommand": "Sorry, there was an error running that command."
+	}
+}
