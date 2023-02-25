@@ -1,6 +1,6 @@
 const replaceAll = require('string.prototype.replaceall');
 const fs = require('fs');
-const path = "./input.txt";
+const path = "../data/input.txt";
 const input = fs.readFileSync(path);
 let output = "";
 
