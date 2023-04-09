@@ -12,19 +12,31 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = Discord;
 const debugMode = process.env.DEBUG;
 const config = require('../data/config.json');
 const strings = require('../data/strings.json');
-const slashCommandFiles = fs.readdirSync('./slash-commands/').filter(file => file.endsWith('.js'));
 
 const functions = {
 	// Functions for managing and creating Collections
 	collectionBuilders: {
 		// Create the collection of slash commands
 		slashCommands(client) {
+			const slashCommandFiles = fs.readdirSync('./_slashCommands/').filter(file => (file.endsWith(".js") && !file.startsWith("_")));
 			if (!client.slashCommands) client.slashCommands = new Discord.Collection();
 			client.slashCommands.clear();
 			for (const file of slashCommandFiles) {
-				const slashCommand = require(`../slash-commands/${file}`);
+				const slashCommand = require(`../_slashCommands/${file}`);
 				if (slashCommand.data != undefined) {
 					client.slashCommands.set(slashCommand.data.name, slashCommand);
+				}
+			}
+			if (debugMode) console.log('Slash Commands Collection Built');
+		},
+		dotCommands(client) {
+			const dotCommandFiles = fs.readdirSync('./_dotCommands/').filter(file => (file.endsWith(".js") && !file.startsWith("_")));
+			if (!client.dotCommands) client.dotCommands = new Discord.Collection();
+			client.dotCommands.clear();
+			for (const file of dotCommandFiles) {
+				const dotCommand = require(`../_dotCommands/${file}`);
+				if (dotCommand.data != undefined) {
+					client.dotCommands.set(dotCommand.data.name, dotCommand);
 				}
 			}
 			if (debugMode) console.log('Slash Commands Collection Built');

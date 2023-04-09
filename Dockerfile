@@ -1,8 +1,8 @@
-FROM node:16
+FROM node:18
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-COPY package.json ./
+COPY src/package.json ./
 RUN npm install
-COPY . .
+COPY ./src .
 CMD [ "node", "main.js" ]
