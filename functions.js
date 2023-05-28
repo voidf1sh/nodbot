@@ -28,6 +28,14 @@ const configuration = new Configuration({
 	apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
+async function openAIStatus(o) {
+	const response = await o.listModels();
+	const models = response.data.data;
+	models.forEach(e => {
+		console.log(`Model ID: ${e.id}`);
+	});
+};
+openAIStatus(openai);
 
 // Various imports from other files
 const config = require('./config.json');
@@ -544,13 +552,27 @@ const functions = {
 				const response = await openai.createCompletion({
 					model: 'text-davinci-003',
 					prompt: userPrompt,
-					temperature: 0,
+					temperature: 0.7,
 					max_tokens: 250
 				}).catch(e => {
 					reject(e);
 					return null;
 				});
 				resolve(response);
+			});
+		},
+		imagePrompt(userPrompt, userId) {
+			return new Promise(async (resolve, reject) => {
+				try {
+					const response = await openai.createImage({
+						prompt: userPrompt,
+						user: userId
+					});
+					resolve(response.data.data[0].url);
+				} catch (e) {
+					reject(e);
+					return;
+				}
 			});
 		}
 	},
@@ -595,6 +617,18 @@ const functions = {
 
 		return newText + ' <:spongebob:1053398825965985822>';
 	},
+	generateErrorId() {
+		const digitCount = 10;
+		const digits = [];
+		for (let i = 0; i < digitCount; i++) {
+			const randBase = Math.random();
+			const randNumRaw = randBase * 10;
+			const randNumRound = Math.floor(randNumRaw);
+			digits.push(randNumRound);
+		}
+		const errorId = digits.join("");
+		return errorId;
+	}
 };
 
 module.exports = functions;
