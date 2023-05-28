@@ -21,6 +21,14 @@ const Discord = require('discord.js');
 // Fuzzy text matching for db lookups
 const FuzzySearch = require('fuzzy-search');
 
+// OpenAI
+const { Configuration, OpenAIApi } = require("openai");
+
+const configuration = new Configuration({
+	apiKey: process.env.OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
+
 // Various imports from other files
 const config = require('./config.json');
 const strings = require('./strings.json');
@@ -528,6 +536,22 @@ const functions = {
 				const query = ``
 				return strainName;
 			}
+		}
+	},
+	openAI: {
+		chatPrompt(userPrompt) {
+			return new Promise(async (resolve, reject) => {
+				const response = await openai.createCompletion({
+					model: 'text-davinci-003',
+					prompt: userPrompt,
+					temperature: 0,
+					max_tokens: 250
+				}).catch(e => {
+					reject(e);
+					return null;
+				});
+				resolve(response);
+			});
 		}
 	},
 	// Parent-Level functions (miscellaneuous)

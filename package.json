@@ -1,7 +1,7 @@
 {
   "name": "nodbot",
-  "version": "3.1.0",
-  "description": "Nods and Nod Accessories.",
+  "version": "3.2.0",
+  "description": "Nods and Nod Accessories, now with ChatGPT!",
   "main": "main.js",
   "dependencies": {
     "@discordjs/builders": "^0.16.0",
@@ -12,10 +12,11 @@
     "dotenv": "^10.0.0",
     "fuzzy-search": "^3.2.1",
     "mysql": "^2.18.1",
+    "openai": "^3.2.1",
     "tenorjs": "^1.0.10"
   },
   "engines": {
-    "node": "16.x"
+    "node": "18.x"
   },
   "devDependencies": {
     "eslint": "^7.32.0"
