@@ -377,6 +377,14 @@ const functions = {
 
 			interaction.reply({ embeds: [ strainEmbed ]});
 		},
+		dalle(prompt, imageUrl) {
+			const dalleEmbed = new Discord.MessageEmbed()
+				.setAuthor({ name: "NodDraw" })
+				.setTimestamp()
+				.setImage(imageUrl)
+				.setFooter({ text: prompt });
+			return { embeds: [dalleEmbed] };
+		}
 	},
 	collect: {
 		gifName(interaction) {
@@ -561,11 +569,12 @@ const functions = {
 				resolve(response);
 			});
 		},
-		imagePrompt(userPrompt, userId) {
+		imagePrompt(userPrompt, size, userId) {
 			return new Promise(async (resolve, reject) => {
 				try {
 					const response = await openai.createImage({
 						prompt: userPrompt,
+						size: size,
 						user: userId
 					});
 					resolve(response.data.data[0].url);

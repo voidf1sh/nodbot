@@ -9,13 +9,25 @@ module.exports = {
 			o.setName("prompt")
 			 .setDescription("Prompt to send to DALL-e")
 			 .setRequired(true)
-		),
+		)
+		.addStringOption(o =>
+			o.setName("size")
+			 .setDescription("1024x1024, 512x512, 256x256")
+			 .setRequired(false)
+			 .addChoices(
+				{ name: "1024x1024 (2¢)", value: "1024x1024" },
+				{ name: "512x512 (1.8¢)", value: "512x512" },
+				{ name: "256x256 (1.6¢)", value: "256x256" }
+			 )),
 	async execute(interaction) {
 		try {
 			await interaction.deferReply();
 			const userPrompt = interaction.options.getString("prompt");
-			const response = await fn.openAI.imagePrompt(userPrompt);
-			await interaction.editReply(`${response}`);
+			const size = interaction.options.getString("size") ? interaction.options.getString("size") : "512x512";
+
+			const imageUrl = await fn.openAI.imagePrompt(userPrompt, size);
+			const dalleEmbed = fn.embeds.dalle(userPrompt, imageUrl);
+			await interaction.editReply(dalleEmbed);
 		} catch (err) {
 			const errorId = fn.generateErrorId();
 			console.error(`${errorId}: ${err}`);
