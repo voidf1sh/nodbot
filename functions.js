@@ -377,13 +377,27 @@ const functions = {
 
 			interaction.reply({ embeds: [ strainEmbed ]});
 		},
-		dalle(prompt, imageUrl) {
+		dalle(user, prompt, imageUrl) {
 			const dalleEmbed = new Discord.MessageEmbed()
-				.setAuthor({ name: "NodDraw" })
-				.setTimestamp()
+				.setAuthor({ name: "NodBot powered by DALL-E", iconURL: "https://assets.vfsh.dev/openai-logos/PNGs/openai-logomark.png" })
+				.addFields(
+					{ name: "Prompt", value: prompt }
+				)
 				.setImage(imageUrl)
-				.setFooter({ text: prompt });
+				.setFooter({ text: user.username, iconURL: user.avatarURL() })
+				.setTimestamp();
 			return { embeds: [dalleEmbed] };
+		},
+		gpt(user, prompt, response) {
+			const gptEmbed = new Discord.MessageEmbed()
+				.setAuthor({ name: "NodBot powered by GPT-3", iconURL: "https://assets.vfsh.dev/openai-logos/PNGs/openai-logomark.png" })
+				.addFields(
+					{ name: "Prompt", value: prompt },
+					{ name: "Response", value: response }
+				)
+				.setFooter({ text: user.username, iconURL: user.avatarURL() })
+				.setTimestamp();
+			return { embeds: [gptEmbed] };
 		}
 	},
 	collect: {
@@ -566,7 +580,7 @@ const functions = {
 					reject(e);
 					return null;
 				});
-				resolve(response);
+				resolve(response.data.choices[0].text);
 			});
 		},
 		imagePrompt(userPrompt, size, userId) {

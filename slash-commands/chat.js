@@ -14,7 +14,7 @@ module.exports = {
 		await interaction.deferReply();
 		const userPrompt = interaction.options.getString("prompt");
 		const response = await fn.openAI.chatPrompt(userPrompt).catch(e => console.error(e));
-		const responseText = response.data.choices[0].text;
-		await interaction.editReply(`${responseText}`);
+		const gptEmbed = fn.embeds.gpt(interaction.user, userPrompt, response);
+		await interaction.editReply(gptEmbed);
 	},
 };
