@@ -377,26 +377,21 @@ const functions = {
 
 			interaction.reply({ embeds: [ strainEmbed ]});
 		},
-		dalle(user, prompt, imageUrl) {
+		dalle(prompt, imageUrl, size) {
 			const dalleEmbed = new Discord.MessageEmbed()
 				.setAuthor({ name: "NodBot powered by DALL-E", iconURL: "https://assets.vfsh.dev/openai-logos/PNGs/openai-logomark.png" })
 				.addFields(
 					{ name: "Prompt", value: prompt }
 				)
 				.setImage(imageUrl)
-				.setFooter({ text: user.username, iconURL: user.avatarURL() })
-				.setTimestamp();
+				.setFooter({ text: `This ${size} image cost ${strings.costs.dalle[size]}¢ to generate.` })
 			return { embeds: [dalleEmbed] };
 		},
-		gpt(user, prompt, response) {
+		gpt(prompt, response, usage) {
 			const gptEmbed = new Discord.MessageEmbed()
 				.setAuthor({ name: "NodBot powered by GPT-3", iconURL: "https://assets.vfsh.dev/openai-logos/PNGs/openai-logomark.png" })
-				.addFields(
-					{ name: "Prompt", value: prompt },
-					{ name: "Response", value: response }
-				)
-				.setFooter({ text: user.username, iconURL: user.avatarURL() })
-				.setTimestamp();
+				.setDescription(`**Prompt**\n${prompt}\n\n**Response**\n${response}`)
+				.setFooter({ text: `This prompt used ${usage.tokens} tokens for a cost of ${usage.usd}¢` })
 			return { embeds: [gptEmbed] };
 		}
 	},
@@ -580,7 +575,7 @@ const functions = {
 					reject(e);
 					return null;
 				});
-				resolve(response.data.choices[0].text);
+				resolve(response.data);
 			});
 		},
 		imagePrompt(userPrompt, size, userId) {

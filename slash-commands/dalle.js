@@ -26,7 +26,7 @@ module.exports = {
 			const size = interaction.options.getString("size") ? interaction.options.getString("size") : "512x512";
 
 			const imageUrl = await fn.openAI.imagePrompt(userPrompt, size);
-			const dalleEmbed = fn.embeds.dalle(interaction.user, userPrompt, imageUrl);
+			const dalleEmbed = fn.embeds.dalle(userPrompt, imageUrl, size);
 			await interaction.editReply(dalleEmbed);
 		} catch (err) {
 			const errorId = fn.generateErrorId();

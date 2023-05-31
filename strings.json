@@ -22,5 +22,15 @@
 		"bussin fr, no cap",
 		"ongggg no :billed_cap: fr fr"
 	],
+	"costs": {
+		"gpt": {
+			"gpt-3.5-turbo": 0.2
+		},
+		"dalle": {
+			"256x256": 1.6,
+			"512x512": 1.8,
+			"1024x1024": 2.0
+		}
+	},
 	"temp": {}
 }
