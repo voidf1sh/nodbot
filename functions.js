@@ -391,7 +391,7 @@ const functions = {
 			const gptEmbed = new Discord.MessageEmbed()
 				.setAuthor({ name: "NodBot powered by GPT-3", iconURL: "https://assets.vfsh.dev/openai-logos/PNGs/openai-logomark.png" })
 				.setDescription(`**Prompt**\n${prompt}\n\n**Response**\n${response}`)
-				.setFooter({ text: `This prompt used ${usage.tokens} tokens for a cost of ${usage.usd}¢` })
+				.setFooter({ text: `This prompt used ${usage.tokens} tokens for a cost of ${usage.usdc}¢` })
 			return { embeds: [gptEmbed] };
 		}
 	},
@@ -488,6 +488,12 @@ const functions = {
 					resolve();
 				});
 			})
+		},
+		openai(user, prompt, engine, tokens, usdc) {
+			const query = `INSERT INTO openai (user, prompt, engine, tokens, usdc) VALUES (${db.escape(user)}, ${db.escape(prompt)}, ${db.escape(engine)}, ${db.escape(tokens)}, ${db.escape(usdc)})`;
+			db.query(query, (err) => {
+				if (err) throw err;
+			});
 		}
 	},
 	download: {

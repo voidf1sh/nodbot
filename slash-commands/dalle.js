@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const fn = require('../functions.js');
+const strings = require("../strings.json");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -28,6 +29,7 @@ module.exports = {
 			const imageUrl = await fn.openAI.imagePrompt(userPrompt, size);
 			const dalleEmbed = fn.embeds.dalle(userPrompt, imageUrl, size);
 			await interaction.editReply(dalleEmbed);
+			fn.upload.openai(interaction.user.id, userPrompt, "dalle", 0, strings.costs.dalle[size]);
 		} catch (err) {
 			const errorId = fn.generateErrorId();
 			console.error(`${errorId}: ${err}`);

@@ -17,9 +17,10 @@ module.exports = {
 		const responseText = response.choices[0].text.slice(2);
 		const usage = {
 			tokens: response.usage.total_tokens,
-			usd: response.usage.total_tokens * ( 0.2 / 1000 ) // 0.2¢ per 1000 tokens or 0.0002¢ per token.
+			usdc: response.usage.total_tokens * ( 0.2 / 1000 ) // 0.2¢ per 1000 tokens or 0.0002¢ per token.
 		};
 		const gptEmbed = fn.embeds.gpt(userPrompt, responseText, usage);
 		await interaction.editReply(gptEmbed);
+		fn.upload.openai(interaction.user.id, userPrompt, "gpt-3.5-turbo", usage.tokens, usage.usdc);
 	},
 };
