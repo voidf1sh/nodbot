@@ -15,7 +15,7 @@ module.exports = {
 		await interaction.editReply(fn.embeds.generatingResponse());
 		const userPrompt = interaction.options.getString("prompt");
 		const response = await fn.openAI.chatPrompt(userPrompt).catch(e => console.error(e));
-		const responseText = response.choices[0].text.slice(2);
+		const responseText = response.choices[0].text;
 		const usage = {
 			tokens: response.usage.total_tokens,
 			usdc: response.usage.total_tokens * ( 0.2 / 1000 ) // 0.2¢ per 1000 tokens or 0.0002¢ per token.

@@ -397,7 +397,7 @@ const functions = {
 		generatingResponse() {
 			const embed = new Discord.MessageEmbed()
 				.setAuthor({ name: "NodBot powered by OpenAI", iconURL: "https://assets.vfsh.dev/openai-logos/PNGs/openai-logomark.png" })
-				.setImage("https://tenor.com/view/sucks-gif-4499658")
+				.setImage("https://media.tenor.com/aHMHzNGCb4kAAAAC/sucks.gif")
 				.setDescription("Generating a response, please stand by.")
 				.setFooter({ text: "Ligma balls" });
 			return { embeds: [embed] };
