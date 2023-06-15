@@ -12,6 +12,7 @@ module.exports = {
 		),
 	async execute(interaction) {
 		await interaction.deferReply();
+		await interaction.editReply(fn.embeds.generatingResponse());
 		const userPrompt = interaction.options.getString("prompt");
 		const response = await fn.openAI.chatPrompt(userPrompt).catch(e => console.error(e));
 		const responseText = response.choices[0].text.slice(2);

@@ -23,6 +23,7 @@ module.exports = {
 	async execute(interaction) {
 		try {
 			await interaction.deferReply();
+			await interaction.editReply(fn.embeds.generatingResponse());
 			const userPrompt = interaction.options.getString("prompt");
 			const size = interaction.options.getString("size") ? interaction.options.getString("size") : "512x512";
 

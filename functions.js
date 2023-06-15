@@ -393,6 +393,14 @@ const functions = {
 				.setDescription(`**Prompt**\n${prompt}\n\n**Response**\n${response}`)
 				.setFooter({ text: `This prompt used ${usage.tokens} tokens for a cost of ${usage.usdc}¢` })
 			return { embeds: [gptEmbed] };
+		},
+		generatingResponse() {
+			const embed = new Discord.MessageEmbed()
+				.setAuthor({ name: "NodBot powered by OpenAI", iconURL: "https://assets.vfsh.dev/openai-logos/PNGs/openai-logomark.png" })
+				.setImage("https://tenor.com/view/sucks-gif-4499658")
+				.setDescription("Generating a response, please stand by.")
+				.setFooter({ text: "Ligma balls" });
+			return { embeds: [embed] };
 		}
 	},
 	collect: {
